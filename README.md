@@ -1,2 +1,3 @@
-# diploma-thesis-zverija4
-Diploma thesis: Multi-Platform File Storage Management Tool. Author: Zvěřina Jan
+# Multi-Platform File Storage Management Tool
+- Diploma thesis
+- Author: Zvěřina Jan
