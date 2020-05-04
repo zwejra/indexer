@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTimePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="320.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.DateFilterController">
+   <children>
+      <VBox alignment="CENTER" layoutX="146.0" layoutY="72.0" prefHeight="320.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane fx:id="lastModifiedDate" alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="creationDateLabel" text="Datum vytvoření" />
+                  <Label fx:id="lastModifiedDateLabel" text="Datum změny" GridPane.columnIndex="1" />
+                  <Label fx:id="lastAccessDateLabel" text="Datum posledního přístupu" GridPane.columnIndex="2" />
+                  <JFXDatePicker fx:id="creationDateDatePicker" onAction="#handleCreationDateDatePicker" prefWidth="180.0" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="creationDateTimePicker" onAction="#handleCreationDateTimePicker" prefWidth="180.0" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="lastModifiedDateDatePicker" onAction="#handleLastModifiedDateDatePicker" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="lastModifiedDateTimePicker" onAction="#handleLastModifiedDateTimePicker" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="lastAccessDateDatePicker" onAction="#handleLastAccessDateDatePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="lastAccessDateTimePicker" onAction="#handleLastAccessDateTimePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <JFXComboBox fx:id="creationDateComboBox" onAction="#handleCreationDateComboBox" prefWidth="180.0" GridPane.rowIndex="1" />
+                  <JFXComboBox fx:id="lastModifiedDateComboBox" onAction="#handleLastModifiedDateComboBox" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <JFXComboBox fx:id="lastAccessDateComboBox" onAction="#handleLastAccessDateComboBox" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
