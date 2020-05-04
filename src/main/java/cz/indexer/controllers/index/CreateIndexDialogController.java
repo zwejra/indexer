@@ -28,31 +28,31 @@ import java.util.ResourceBundle;
 
 public class CreateIndexDialogController implements Initializable {
 	@FXML
-	AnchorPane createIndexWindow;
+	private AnchorPane createIndexWindow;
 
 	@FXML
-	JFXTextField mediaNameTextField;
+	private JFXTextField mediaNameTextField;
 	@FXML
-	JFXTextField extensionTextField;
+	private JFXTextField extensionTextField;
 
 	@FXML
-	Button cancelButton;
+	private Button cancelButton;
 	@FXML
-	Button createIndexButton;
+	private Button createIndexButton;
 
 	@FXML
-	JFXListView<IndexManagerImpl.MetadataForIndexing> indexedMetadataListView  = new JFXListView<>();
+	private JFXListView<IndexManagerImpl.MetadataForIndexing> indexedMetadataListView  = new JFXListView<>();
 	@FXML
-	JFXListView<NonIndexedDirectory> excludedDirectoriesListView  = new JFXListView<>();
+	private JFXListView<NonIndexedDirectory> excludedDirectoriesListView  = new JFXListView<>();
 	@FXML
-	JFXListView<NonIndexedExtension> excludedExtensionsListView = new JFXListView<>();
+	private JFXListView<NonIndexedExtension> excludedExtensionsListView = new JFXListView<>();
 
-	IndexManager indexManager = new IndexManagerImpl();
-	MemoryDeviceManager memoryDeviceManager = new MemoryDeviceManagerImpl();
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
 
-	DirectoryChooser directoryChooser = new DirectoryChooser();
+	private DirectoryChooser directoryChooser = new DirectoryChooser();
 
-	MemoryDevice selectedMemoryDevice;
+	private MemoryDevice selectedMemoryDevice;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

@@ -33,8 +33,8 @@ public class IndexManagementController implements Initializable {
 	@FXML
 	private Pane memoryDeviceInfoPane = new Pane();
 
-	private MemoryDeviceManager memoryDeviceManager = new MemoryDeviceManagerImpl();
-	private IndexManager indexManager = new IndexManagerImpl();
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
 
 	private MemoryDevice selectedMemoryDevice;
 
@@ -80,15 +80,11 @@ public class IndexManagementController implements Initializable {
 					memoryDeviceInfoPane.getChildren().setAll((Node) loader.load());
 					IndexedMemoryDeviceController indexedMemoryDeviceController = loader.getController();
 					indexedMemoryDeviceController.setSelectedMemoryDevice(memoryDevice);
-					indexedMemoryDeviceController.setMemoryDeviceManager(memoryDeviceManager);
-					indexedMemoryDeviceController.setIndexManager(indexManager);
 				} else {
 					loader = new FXMLLoader(getClass().getResource(NON_INDEXED_MEMORY_DEVICE_FXML));
 					memoryDeviceInfoPane.getChildren().setAll((Node) loader.load());
 					NonIndexedMemoryDeviceController nonIndexedMemoryDeviceController = loader.getController();
 					nonIndexedMemoryDeviceController.setSelectedMemoryDevice(memoryDevice);
-					nonIndexedMemoryDeviceController.setMemoryDeviceManager(memoryDeviceManager);
-					nonIndexedMemoryDeviceController.setIndexManager(indexManager);
 				}
 			}
 		} catch (IOException e) {

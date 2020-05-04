@@ -33,17 +33,27 @@ import java.util.*;
 
 public class IndexManagerImpl implements IndexManager {
 
-	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	ObservableList<MetadataForIndexing> metadataForIndexing = FXCollections.observableArrayList();
-	ObservableList<NonIndexedExtension> nonIndexedExtensions = FXCollections.observableArrayList();
-	ObservableList<NonIndexedDirectory> nonIndexedDirectories = FXCollections.observableArrayList();
+	private ObservableList<MetadataForIndexing> metadataForIndexing = FXCollections.observableArrayList();
+	private ObservableList<NonIndexedExtension> nonIndexedExtensions = FXCollections.observableArrayList();
+	private ObservableList<NonIndexedDirectory> nonIndexedDirectories = FXCollections.observableArrayList();
 
-	MemoryDeviceManager memoryDeviceManager = new MemoryDeviceManagerImpl();
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
 
-	MetadataDAO metadataDAO = new MetadataDAOImpl();
+	private MetadataDAO metadataDAO = MetadataDAOImpl.getInstance();
 
-	IndexedFileDAO indexedFileDAO = new IndexedFileDAOImpl();
+	private IndexedFileDAO indexedFileDAO = IndexedFileDAOImpl.getInstance();
+
+	private static IndexManagerImpl instance = null;
+
+	public static IndexManagerImpl getInstance() {
+		if (instance == null)
+			instance = new IndexManagerImpl();
+		return instance;
+	}
+
+	private IndexManagerImpl() {}
 
 	@Override
 	public ObservableList<MetadataForIndexing> getMetadataForIndexing() {

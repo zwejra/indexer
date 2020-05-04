@@ -8,44 +8,48 @@ import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.managers.impl.IndexManagerImpl;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class DateFilterController implements Initializable {
 
-	public Label creationDateLabel;
-	public Label lastModifiedDateLabel;
-	public Label lastAccessDateLabel;
+	@FXML
+	private Label creationDateLabel;
+	@FXML
+	private Label lastModifiedDateLabel;
+	@FXML
+	private Label lastAccessDateLabel;
 
-	public JFXDatePicker creationDateDatePicker;
-	public JFXTimePicker creationDateTimePicker;
+	@FXML
+	private JFXDatePicker creationDateDatePicker;
+	@FXML
+	private JFXTimePicker creationDateTimePicker;
 
-	public JFXDatePicker lastModifiedDateDatePicker;
-	public JFXTimePicker lastModifiedDateTimePicker;
+	@FXML
+	private JFXDatePicker lastModifiedDateDatePicker;
+	@FXML
+	private JFXTimePicker lastModifiedDateTimePicker;
 
-	public JFXDatePicker lastAccessDateDatePicker;
-	public JFXTimePicker lastAccessDateTimePicker;
+	@FXML
+	private JFXDatePicker lastAccessDateDatePicker;
+	@FXML
+	private JFXTimePicker lastAccessDateTimePicker;
 
-	public JFXComboBox creationDateComboBox;
-	public JFXComboBox lastModifiedDateComboBox;
-	public JFXComboBox lastAccessDateComboBox;
+	@FXML
+	private JFXComboBox creationDateComboBox;
+	@FXML
+	private JFXComboBox lastModifiedDateComboBox;
+	@FXML
+	private JFXComboBox lastAccessDateComboBox;
 
-	FileSearchController fileSearchController;
+	private FileSearchController fileSearchController;
 
-	MemoryDeviceManager memoryDeviceManager;
-	IndexManager indexManager;
-
-	public void setMemoryDeviceManager(MemoryDeviceManager memoryDeviceManager) {
-		this.memoryDeviceManager = memoryDeviceManager;
-	}
-
-	public void setIndexManager(IndexManager indexManager) {
-		this.indexManager = indexManager;
-	}
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -56,31 +60,40 @@ public class DateFilterController implements Initializable {
 		this.fileSearchController = fileSearchController;
 	}
 
+	@FXML
 	public void handleCreationDateDatePicker(ActionEvent actionEvent) {
 
 	}
 
+	@FXML
 	public void handleCreationDateTimePicker(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleLastModifiedDateDatePicker(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleLastModifiedDateTimePicker(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleLastAccessDateDatePicker(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleLastAccessDateTimePicker(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleCreationDateComboBox(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleLastModifiedDateComboBox(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleLastAccessDateComboBox(ActionEvent actionEvent) {
 	}
 }

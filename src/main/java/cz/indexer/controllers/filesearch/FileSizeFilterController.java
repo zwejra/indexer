@@ -4,7 +4,10 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import cz.indexer.managers.api.IndexManager;
 import cz.indexer.managers.api.MemoryDeviceManager;
+import cz.indexer.managers.impl.IndexManagerImpl;
+import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
@@ -12,21 +15,16 @@ import java.util.ResourceBundle;
 
 public class FileSizeFilterController implements Initializable {
 
-	public JFXComboBox fileSizeComboBox;
-	public JFXTextField fileSizeTextField;
+	@FXML
+	private JFXComboBox fileSizeComboBox;
 
-	FileSearchController fileSearchController;
+	@FXML
+	private JFXTextField fileSizeTextField;
 
-	MemoryDeviceManager memoryDeviceManager;
-	IndexManager indexManager;
+	private FileSearchController fileSearchController;
 
-	public void setMemoryDeviceManager(MemoryDeviceManager memoryDeviceManager) {
-		this.memoryDeviceManager = memoryDeviceManager;
-	}
-
-	public void setIndexManager(IndexManager indexManager) {
-		this.indexManager = indexManager;
-	}
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -37,9 +35,11 @@ public class FileSizeFilterController implements Initializable {
 		this.fileSearchController = fileSearchController;
 	}
 
+	@FXML
 	public void handleFileSizeTextField(ActionEvent actionEvent) {
 	}
 
+	@FXML
 	public void handleFileSizeComboBox(ActionEvent actionEvent) {
 	}
 }

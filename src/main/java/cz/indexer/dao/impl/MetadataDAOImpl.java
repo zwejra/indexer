@@ -23,6 +23,16 @@ public class MetadataDAOImpl implements MetadataDAO {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
+	private static MetadataDAOImpl instance = null;
+
+	public static MetadataDAOImpl getInstance() {
+		if (instance == null)
+			instance = new MetadataDAOImpl();
+		return instance;
+	}
+
+	private MetadataDAOImpl() {}
+
 	@Override
 	public List<Metadata> getAllMetadata() {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

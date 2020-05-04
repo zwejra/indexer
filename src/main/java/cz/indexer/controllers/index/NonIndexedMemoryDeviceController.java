@@ -2,6 +2,8 @@ package cz.indexer.controllers.index;
 
 import cz.indexer.managers.api.IndexManager;
 import cz.indexer.managers.api.MemoryDeviceManager;
+import cz.indexer.managers.impl.IndexManagerImpl;
+import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -25,31 +26,24 @@ public class NonIndexedMemoryDeviceController implements Initializable {
 
 	private static String CREATE_INDEX_DIALOG_FXML = "/cz.indexer.fxml/CreateIndexDialog.fxml";
 
-	private MemoryDevice selectedMemoryDevice;
-
-	private MemoryDeviceManager memoryDeviceManager;
-	private IndexManager indexManager;
-
 	@FXML
 	private AnchorPane mainAnchorPane;
+
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
+
+	private MemoryDevice selectedMemoryDevice;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 	}
 
-	public void setMemoryDeviceManager(MemoryDeviceManager memoryDeviceManager) {
-		this.memoryDeviceManager = memoryDeviceManager;
-	}
-
-	public void setIndexManager(IndexManager indexManager) {
-		this.indexManager = indexManager;
-	}
-
 	public void setSelectedMemoryDevice(MemoryDevice memoryDevice) {
 		this.selectedMemoryDevice = memoryDevice;
 	}
 
+	@FXML
 	public void handleCreateIndexButton(ActionEvent actionEvent) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(CREATE_INDEX_DIALOG_FXML));
 		Parent parent;

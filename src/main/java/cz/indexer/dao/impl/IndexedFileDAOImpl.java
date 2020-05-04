@@ -3,7 +3,6 @@ package cz.indexer.dao.impl;
 import cz.indexer.dao.api.IndexedFileDAO;
 import cz.indexer.model.Index;
 import cz.indexer.model.IndexedFile;
-import cz.indexer.model.MemoryDevice;
 import cz.indexer.model.metamodel.IndexedFile_;
 import cz.indexer.tools.UtilTools;
 import org.slf4j.Logger;
@@ -21,6 +20,16 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	EntityManager entityManager = UtilTools.getEntityManager();
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
+	private static IndexedFileDAOImpl instance = null;
+
+	public static IndexedFileDAOImpl getInstance() {
+		if (instance == null)
+			instance = new IndexedFileDAOImpl();
+		return instance;
+	}
+
+	private IndexedFileDAOImpl() {}
 
 	@Override
 	public List<IndexedFile> getFiles(Index index) {

@@ -4,7 +4,6 @@ import cz.indexer.dao.api.MemoryDeviceDAO;
 import cz.indexer.dao.impl.MemoryDeviceDAOImpl;
 import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.model.MemoryDevice;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +25,17 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 
 	ObservableList<MemoryDevice> indexedMemoryDevices = FXCollections.observableArrayList();
 
-	MemoryDeviceDAO memoryDeviceDAO = new MemoryDeviceDAOImpl();
+	MemoryDeviceDAO memoryDeviceDAO = MemoryDeviceDAOImpl.getInstance();
+
+	private static MemoryDeviceManagerImpl instance = null;
+
+	public static MemoryDeviceManagerImpl getInstance() {
+		if (instance == null)
+			instance = new MemoryDeviceManagerImpl();
+		return instance;
+	}
+
+	private MemoryDeviceManagerImpl() {}
 
 	@Override
 	public ObservableList<MemoryDevice> getConnectedMemoryDevices() {
@@ -110,11 +119,8 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 	public void deleteMemoryDevice(MemoryDevice memoryDevice) {
 		logger.info("Deleting of memory device {} started.", memoryDevice);
 
-
-
 		memoryDeviceDAO.deleteMemoryDevice(memoryDevice);
 
 		logger.info("Deleting of memory device {} finished.", memoryDevice);
-
 	}
 }

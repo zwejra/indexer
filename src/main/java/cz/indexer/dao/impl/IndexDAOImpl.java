@@ -17,6 +17,16 @@ public class IndexDAOImpl implements IndexDAO {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
+	private static IndexDAOImpl instance = null;
+
+	public static IndexDAOImpl getInstance() {
+		if (instance == null)
+			instance = new IndexDAOImpl();
+		return instance;
+	}
+
+	private IndexDAOImpl() {}
+
 	@Override
 	public Index getIndex(MemoryDevice memoryDevice) {
 /*		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

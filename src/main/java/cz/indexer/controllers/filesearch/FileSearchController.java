@@ -1,7 +1,6 @@
 package cz.indexer.controllers.filesearch;
 
 import com.jfoenix.controls.JFXButton;
-import com.sun.jna.Memory;
 import cz.indexer.managers.api.IndexManager;
 import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.managers.impl.IndexManagerImpl;
@@ -20,58 +19,69 @@ import javafx.scene.layout.BorderPane;
 import lombok.Getter;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class FileSearchController implements Initializable {
 
-	public Label searchResultsLabel;
-	public Button searchButton;
-
-	public TableView resultsTableView;
-	public TableColumn nameTableColumn;
-	public TableColumn pathTableColumn;
-	public TableColumn sizeTableColumn;
-	public TableColumn creationTimeTableColumn;
-	public TableColumn lastChangeTimeTableColumn;
-	public TableColumn lastAccessTimeTableColumn;
-
-	public Label filtersLabel;
-
-	public JFXButton memoryDeviceFilterButton;
-	public JFXButton fileNameFilterButton;
-	public JFXButton dateFilterButton;
-	public JFXButton fileSizeFilterButton;
+	@FXML
+	private Label searchResultsLabel;
+	@FXML
+	private Button searchButton;
 
 	@FXML
-	BorderPane rootBorderPane;
+	private TableView resultsTableView;
+	@FXML
+	private TableColumn nameTableColumn;
+	@FXML
+	private TableColumn pathTableColumn;
+	@FXML
+	private TableColumn sizeTableColumn;
+	@FXML
+	private TableColumn creationTimeTableColumn;
+	@FXML
+	private TableColumn lastChangeTimeTableColumn;
+	@FXML
+	private TableColumn lastAccessTimeTableColumn;
 
 	@FXML
-	Parent memoryDeviceFilter;
-	@FXML
-	Parent fileNameFilter;
-	@FXML
-	Parent dateFilter;
-	@FXML
-	Parent fileSizeFilter;
+	private Label filtersLabel;
 
 	@FXML
-	MemoryDeviceFilterController memoryDeviceFilterController;
+	private JFXButton memoryDeviceFilterButton;
 	@FXML
-	FileNameFilterController fileNameFilterController;
+	private JFXButton fileNameFilterButton;
 	@FXML
-	DateFilterController dateFilterController;
+	private JFXButton dateFilterButton;
 	@FXML
-	FileSizeFilterController fileSizeFilterController;
+	private JFXButton fileSizeFilterButton;
 
-	@Getter MemoryDeviceManager memoryDeviceManager = new MemoryDeviceManagerImpl();
-	@Getter IndexManager indexManager = new IndexManagerImpl();
+	@FXML
+	private BorderPane rootBorderPane;
+
+	@FXML
+	private Parent memoryDeviceFilter;
+	@FXML
+	private Parent fileNameFilter;
+	@FXML
+	private Parent dateFilter;
+	@FXML
+	private Parent fileSizeFilter;
+
+	@FXML
+	private MemoryDeviceFilterController memoryDeviceFilterController;
+	@FXML
+	private FileNameFilterController fileNameFilterController;
+	@FXML
+	private DateFilterController dateFilterController;
+	@FXML
+	private FileSizeFilterController fileSizeFilterController;
+
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		rootBorderPane.setCenter(memoryDeviceFilter);
-		memoryDeviceManager.refreshMemoryDevices();
-		memoryDeviceFilterController.setMemoryDevicesListViewItems(memoryDeviceManager.getIndexedMemoryDevices());
 
 		memoryDeviceFilterController.setFileSearchController(this);
 		fileNameFilterController.setFileSearchController(this);
@@ -79,22 +89,30 @@ public class FileSearchController implements Initializable {
 		fileSizeFilterController.setFileSearchController(this);
 	}
 
+	@FXML
 	public void handleSearchActionButton(ActionEvent actionEvent) {
-		ObservableList<Integer> checkedMemoryDevices = memoryDeviceFilterController.getMemoryDevicesCheckListView().getCheckModel().getCheckedIndices();
+		ObservableList<MemoryDevice> checkedMemoryDevices = memoryDeviceFilterController.getMemoryDevicesCheckListView()
+				.getCheckModel().getCheckedItems();
+
+		System.out.println(checkedMemoryDevices);
 	}
 
+	@FXML
 	public void handleMemoryDeviceFilterButton(ActionEvent actionEvent) {
 		rootBorderPane.setCenter(memoryDeviceFilter);
 	}
 
+	@FXML
 	public void handleFileNameFilterButton(ActionEvent actionEvent) {
 		rootBorderPane.setCenter(fileNameFilter);
 	}
 
+	@FXML
 	public void handleDateFilterButton(ActionEvent actionEvent) {
 		rootBorderPane.setCenter(dateFilter);
 	}
 
+	@FXML
 	public void handleFileSizeFilterButton(ActionEvent actionEvent) {
 		rootBorderPane.setCenter(fileSizeFilter);
 	}

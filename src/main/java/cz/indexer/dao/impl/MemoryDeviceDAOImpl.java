@@ -24,6 +24,16 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
+	private static MemoryDeviceDAOImpl instance = null;
+
+	public static MemoryDeviceDAOImpl getInstance() {
+		if (instance == null)
+			instance = new MemoryDeviceDAOImpl();
+		return instance;
+	}
+
+	private MemoryDeviceDAOImpl() {}
+
 	public HashMap<String, MemoryDevice> getAllMemoryDevices() {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MemoryDevice> criteriaQuery = criteriaBuilder.createQuery(MemoryDevice.class);

@@ -20,34 +20,28 @@ public class IndexedMemoryDeviceController implements Initializable {
 	@FXML
 	private AnchorPane mainAnchorPane;
 
-	private MemoryDevice selectedMemoryDevice;
+	private IndexManager indexManager = IndexManagerImpl.getInstance();
+	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
 
-	IndexManager indexManager;
-	MemoryDeviceManager memoryDeviceManager;
+	private MemoryDevice selectedMemoryDevice;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 	}
 
-	public void setMemoryDeviceManager(MemoryDeviceManager memoryDeviceManager) {
-		this.memoryDeviceManager = memoryDeviceManager;
-	}
-
-	public void setIndexManager(IndexManager indexManager) {
-		this.indexManager = indexManager;
-	}
-
 	public void setSelectedMemoryDevice(MemoryDevice memoryDevice) {
 		this.selectedMemoryDevice = memoryDevice;
 	}
 
+	@FXML
 	public void handleDeleteIndexActionButton(ActionEvent actionEvent) {
 		indexManager.deleteIndex(selectedMemoryDevice);
 		memoryDeviceManager.refreshMemoryDevices();
 		mainAnchorPane.getChildren().clear();
 	}
 
+	@FXML
 	public void handleUpdateIndexActionButton(ActionEvent actionEvent) {
 		indexManager.updateIndex(selectedMemoryDevice);
 	}

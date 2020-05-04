@@ -16,7 +16,17 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-	MetadataDAO metadataDAO = new MetadataDAOImpl();
+	MetadataDAO metadataDAO = MetadataDAOImpl.getInstance();
+
+	private static DatabaseManagerImpl instance = null;
+
+	public static DatabaseManagerImpl getInstance() {
+		if (instance == null)
+			instance = new DatabaseManagerImpl();
+		return instance;
+	}
+
+	private DatabaseManagerImpl() {}
 
 	public void initializeDatabase() {
 		// Get all optional metadata from the database
