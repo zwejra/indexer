@@ -7,7 +7,6 @@ import cz.indexer.managers.impl.IndexManagerImpl;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,13 +19,12 @@ import java.util.ResourceBundle;
 public class MemoryDeviceFilterController implements Initializable {
 
 	@FXML
-	private JFXRadioButton chooseDevicesRadioButton;
+	@Getter private JFXRadioButton chooseDevicesRadioButton;
 	@FXML
-	private JFXRadioButton allDevicesRadioButton;
+	@Getter private JFXRadioButton allDevicesRadioButton;
 
 	@FXML
-	@Getter
-	private CheckListView<MemoryDevice> memoryDevicesCheckListView = new CheckListView();
+	@Getter private CheckListView<MemoryDevice> memoryDevicesCheckListView = new CheckListView();
 
 	private FileSearchController fileSearchController;
 

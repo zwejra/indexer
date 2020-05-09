@@ -1,4 +1,4 @@
-package cz.indexer.model.metamodel;
+package cz.indexer.model;
 
 import cz.indexer.model.Index;
 import cz.indexer.model.Metadata;

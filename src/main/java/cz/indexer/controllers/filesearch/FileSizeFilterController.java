@@ -9,6 +9,7 @@ import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import lombok.Getter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,10 +17,10 @@ import java.util.ResourceBundle;
 public class FileSizeFilterController implements Initializable {
 
 	@FXML
-	private JFXComboBox fileSizeComboBox;
+	@Getter private JFXComboBox fileSizeComboBox;
 
 	@FXML
-	private JFXTextField fileSizeTextField;
+	@Getter private JFXTextField fileSizeTextField;
 
 	private FileSearchController fileSearchController;
 

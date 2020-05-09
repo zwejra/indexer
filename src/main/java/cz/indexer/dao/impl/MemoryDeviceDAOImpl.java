@@ -2,7 +2,7 @@ package cz.indexer.dao.impl;
 
 import cz.indexer.dao.api.MemoryDeviceDAO;
 import cz.indexer.model.MemoryDevice;
-import cz.indexer.model.metamodel.MemoryDevice_;
+import cz.indexer.model.MemoryDevice_;
 import cz.indexer.tools.UtilTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

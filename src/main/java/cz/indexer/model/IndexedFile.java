@@ -1,11 +1,18 @@
 package cz.indexer.model;
 
+import cz.indexer.managers.api.MemoryDeviceManager;
+import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.enums.FileType;
 import lombok.Data;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
+import oshi.PlatformEnum;
+import oshi.SystemInfo;
+import oshi.software.os.OSFileStore;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 @Data
 @Entity
@@ -48,5 +55,20 @@ public class IndexedFile {
 		this.lastModifiedTime = lastModifiedTime;
 		this.fileSize = fileSize;
 		this.type = type;
+	}
+
+	public String getPath() {
+		MemoryDevice memoryDevice = getIndex().getMemoryDevice();
+		memoryDevice = MemoryDeviceManagerImpl.getInstance().refreshConnectedMemoryDevice(memoryDevice);
+
+		if (memoryDevice.isConnected()) {
+			return memoryDevice.getMount() + path;
+		} else {
+			if (SystemInfo.getCurrentPlatformEnum() == PlatformEnum.WINDOWS) {
+				return memoryDevice.getUserDefinedName() + "\\" + path;
+			} else {
+				return memoryDevice.getUserDefinedName() + "/" + path;
+			}
+		}
 	}
 }

@@ -2,7 +2,7 @@ package cz.indexer.dao.impl;
 
 import cz.indexer.dao.api.MetadataDAO;
 import cz.indexer.model.Metadata;
-import cz.indexer.model.metamodel.Metadata_;
+import cz.indexer.model.Metadata_;
 import cz.indexer.tools.UtilTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

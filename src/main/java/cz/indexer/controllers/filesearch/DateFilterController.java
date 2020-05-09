@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import lombok.Getter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,26 +26,26 @@ public class DateFilterController implements Initializable {
 	private Label lastAccessDateLabel;
 
 	@FXML
-	private JFXDatePicker creationDateDatePicker;
+	@Getter private JFXDatePicker creationDateDatePicker;
 	@FXML
-	private JFXTimePicker creationDateTimePicker;
+	@Getter private JFXTimePicker creationDateTimePicker;
 
 	@FXML
-	private JFXDatePicker lastModifiedDateDatePicker;
+	@Getter private JFXDatePicker lastModifiedDateDatePicker;
 	@FXML
-	private JFXTimePicker lastModifiedDateTimePicker;
+	@Getter private JFXTimePicker lastModifiedDateTimePicker;
 
 	@FXML
-	private JFXDatePicker lastAccessDateDatePicker;
+	@Getter private JFXDatePicker lastAccessDateDatePicker;
 	@FXML
-	private JFXTimePicker lastAccessDateTimePicker;
+	@Getter private JFXTimePicker lastAccessDateTimePicker;
 
 	@FXML
-	private JFXComboBox creationDateComboBox;
+	@Getter private JFXComboBox creationDateComboBox;
 	@FXML
-	private JFXComboBox lastModifiedDateComboBox;
+	@Getter private JFXComboBox lastModifiedDateComboBox;
 	@FXML
-	private JFXComboBox lastAccessDateComboBox;
+	@Getter private JFXComboBox lastAccessDateComboBox;
 
 	private FileSearchController fileSearchController;
 

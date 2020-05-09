@@ -7,13 +7,25 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane prefHeight="320.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.FileSizeFilterController">
    <children>
       <VBox alignment="CENTER" prefHeight="320.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <JFXComboBox fx:id="fileSizeComboBox" onAction="#handleFileSizeComboBox" prefWidth="100.0" />
+                  <JFXComboBox fx:id="fileSizeComboBox" onAction="#handleFileSizeComboBox" prefWidth="100.0">
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="menší"/>
+                           <String fx:value="menší rovno"/>
+                           <String fx:value="rovno"/>
+                           <String fx:value="větší"/>
+                           <String fx:value="větší rovno"/>
+                        </FXCollections>
+                     </items>
+                  </JFXComboBox>
                   <JFXTextField fx:id="fileSizeTextField" onAction="#handleFileSizeTextField">
                      <HBox.margin>
                         <Insets left="10.0" />

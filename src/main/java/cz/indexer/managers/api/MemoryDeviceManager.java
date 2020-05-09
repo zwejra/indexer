@@ -23,4 +23,6 @@ public interface MemoryDeviceManager {
 	String trimMountFromPath(MemoryDevice memoryDevice, File file) throws IOException;
 
 	boolean isUserDefinedNameValid(String memoryDeviceName) throws IOException;
+
+	MemoryDevice refreshConnectedMemoryDevice(MemoryDevice fileOwner);
 }

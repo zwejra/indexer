@@ -110,6 +110,14 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 	}
 
 	@Override
+	public MemoryDevice refreshConnectedMemoryDevice(MemoryDevice fileOwner) {
+		for (MemoryDevice memoryDevice: connectedMemoryDevices) {
+			if (memoryDevice.getUuid().equals(fileOwner.getUuid())) return memoryDevice;
+		}
+		return fileOwner;
+	}
+
+	@Override
 	public void createMemoryDevice(MemoryDevice memoryDevice) {
 		memoryDeviceDAO.createMemoryDevice(memoryDevice);
 		logger.info("Created memory device: " + memoryDevice);
