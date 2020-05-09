@@ -1,18 +1,13 @@
 package cz.indexer.model;
 
-import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.enums.FileType;
 import lombok.Data;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 import oshi.PlatformEnum;
 import oshi.SystemInfo;
-import oshi.software.os.OSFileStore;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 @Data
 @Entity
@@ -57,7 +52,9 @@ public class IndexedFile {
 		this.type = type;
 	}
 
-	public String getPath() {
+	public String getAbsolutePath() {
+
+
 		MemoryDevice memoryDevice = getIndex().getMemoryDevice();
 		memoryDevice = MemoryDeviceManagerImpl.getInstance().refreshConnectedMemoryDevice(memoryDevice);
 

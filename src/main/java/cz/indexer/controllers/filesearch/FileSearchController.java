@@ -17,6 +17,8 @@ import cz.indexer.model.gui.SearchDateValue;
 import cz.indexer.model.gui.SearchFileNameValue;
 import cz.indexer.model.gui.SearchSizeValue;
 import cz.indexer.tools.UtilTools;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,14 +33,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -57,11 +58,11 @@ public class FileSearchController implements Initializable {
 	@FXML
 	private TableView<IndexedFile> resultsTableView;
 	@FXML
-	private TableColumn nameTableColumn;
+	private TableColumn<IndexedFile, String> nameTableColumn;
 	@FXML
-	private TableColumn pathTableColumn;
+	private TableColumn<IndexedFile, String> pathTableColumn;
 	@FXML
-	private TableColumn sizeTableColumn;
+	private TableColumn<IndexedFile, Long> sizeTableColumn;
 	@FXML
 	private TableColumn creationTimeTableColumn;
 	@FXML
@@ -117,7 +118,14 @@ public class FileSearchController implements Initializable {
 
 		resultsTableView.setItems(fileSearchManager.getSearchResults());
 		nameTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("fileName"));
-		pathTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("path"));
+		//pathTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("path"));
+		/*pathTableColumn.setCellValueFactory((Callback<TableColumn.CellDataFeatures<IndexedFile, String>, ObservableValue<String>>) indexedFile -> {
+			// p.getValue() returns the Person instance for a particular TableView row
+			return indexedFile.getValue().getAbsolutePath();
+		});*/
+		pathTableColumn.setCellValueFactory(c -> new ReadOnlyObjectWrapper(c.getValue().getAbsolutePath()));
+
+
 		sizeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, Long>("fileSize"));
 		creationTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("creationTime"));
 		lastChangeTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastAccessTime"));
@@ -141,9 +149,9 @@ public class FileSearchController implements Initializable {
 					if (Desktop.isDesktopSupported()) {
 						if (fileOwner.isConnected()) {
 							if (selectedFile.getType().equals(FileType.DIRECTORY)) {
-								Desktop.getDesktop().open(new File(selectedFile.getPath()));
+								Desktop.getDesktop().open(new File(selectedFile.getAbsolutePath()));
 							} else {
-								File path = new File(selectedFile.getPath());
+								File path = new File(selectedFile.getAbsolutePath());
 								Desktop.getDesktop().open(new File(path.getParent()));
 							}
 						} else {
@@ -175,7 +183,45 @@ public class FileSearchController implements Initializable {
 
 		creationTimeTableColumn.setCellFactory(column -> {
 			TableCell<IndexedFile, LocalDateTime> cell = new TableCell<IndexedFile, LocalDateTime>() {
-				private DateTimeFormatter format = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+				private DateTimeFormatter format = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+
+				@Override
+				protected void updateItem(LocalDateTime item, boolean empty) {
+					super.updateItem(item, empty);
+					if(empty) {
+						setText(null);
+					}
+					else {
+						setText(format.format(item));
+					}
+				}
+			};
+
+			return cell;
+		});
+
+		lastAccessTimeTableColumn.setCellFactory(column -> {
+			TableCell<IndexedFile, LocalDateTime> cell = new TableCell<IndexedFile, LocalDateTime>() {
+				private DateTimeFormatter format = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+
+				@Override
+				protected void updateItem(LocalDateTime item, boolean empty) {
+					super.updateItem(item, empty);
+					if(empty) {
+						setText(null);
+					}
+					else {
+						setText(format.format(item));
+					}
+				}
+			};
+
+			return cell;
+		});
+
+		lastChangeTimeTableColumn.setCellFactory(column -> {
+			TableCell<IndexedFile, LocalDateTime> cell = new TableCell<IndexedFile, LocalDateTime>() {
+				private DateTimeFormatter format = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
 				@Override
 				protected void updateItem(LocalDateTime item, boolean empty) {
@@ -218,8 +264,8 @@ public class FileSearchController implements Initializable {
 					dateFilterController.getLastAccessDateTimePicker().getValue());
 
 			SearchDateValue lastModifiedSearchDateValue = getSearchDateValue(dateFilterController.getLastModifiedDateComboBox().getSelectionModel().getSelectedIndex(),
-					dateFilterController.getLastAccessDateDatePicker().getValue(),
-					dateFilterController.getLastAccessDateTimePicker().getValue());
+					dateFilterController.getLastModifiedDateDatePicker().getValue(),
+					dateFilterController.getLastModifiedDateTimePicker().getValue());
 
 			SearchSizeValue searchSizeValue = getSearchSizeValue(fileSizeFilterController.getFileSizeComboBox().getSelectionModel().getSelectedIndex(),
 					fileSizeFilterController.getFileSizeTextField().getText());
