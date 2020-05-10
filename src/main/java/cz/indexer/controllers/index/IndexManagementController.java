@@ -8,11 +8,13 @@ import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class IndexManagementController implements Initializable {
 
 	private static String NON_INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/NonIndexedMemoryDevice.fxml";
 	private static String INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/IndexedMemoryDevice.fxml";
+	public Button refreshButton;
 
 	@FXML
 	private JFXListView<MemoryDevice> connectedMemoryDevicesListView = new JFXListView<>();
@@ -91,5 +94,10 @@ public class IndexManagementController implements Initializable {
 			Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
 			alert.showAndWait();
 		}
+	}
+
+	@FXML
+	public void handleRefreshButtonAction(ActionEvent actionEvent) {
+		memoryDeviceManager.refreshMemoryDevices();
 	}
 }

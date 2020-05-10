@@ -1,0 +1,9 @@
+.indexed-media-vbox {
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
+}
+
+.memory-devices-list-view {
+    -fx-background-insets: 0 1;
+}
