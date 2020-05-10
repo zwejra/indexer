@@ -118,13 +118,7 @@ public class FileSearchController implements Initializable {
 
 		resultsTableView.setItems(fileSearchManager.getSearchResults());
 		nameTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("fileName"));
-		//pathTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("path"));
-		/*pathTableColumn.setCellValueFactory((Callback<TableColumn.CellDataFeatures<IndexedFile, String>, ObservableValue<String>>) indexedFile -> {
-			// p.getValue() returns the Person instance for a particular TableView row
-			return indexedFile.getValue().getAbsolutePath();
-		});*/
 		pathTableColumn.setCellValueFactory(c -> new ReadOnlyObjectWrapper(c.getValue().getAbsolutePath()));
-
 
 		sizeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, Long>("fileSize"));
 		creationTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("creationTime"));
@@ -138,13 +132,10 @@ public class FileSearchController implements Initializable {
 		menuItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				memoryDeviceManager.refreshMemoryDevices();
 				IndexedFile selectedFile = resultsTableView.getSelectionModel().getSelectedItem();
 				MemoryDevice fileOwner = selectedFile.getIndex().getMemoryDevice();
-
 				fileOwner = memoryDeviceManager.refreshConnectedMemoryDevice(fileOwner);
 
-				System.out.println(fileOwner.toString());
 				try {
 					if (Desktop.isDesktopSupported()) {
 						if (fileOwner.isConnected()) {
@@ -188,7 +179,7 @@ public class FileSearchController implements Initializable {
 				@Override
 				protected void updateItem(LocalDateTime item, boolean empty) {
 					super.updateItem(item, empty);
-					if(empty) {
+					if(empty || item == null) {
 						setText(null);
 					}
 					else {
@@ -207,7 +198,7 @@ public class FileSearchController implements Initializable {
 				@Override
 				protected void updateItem(LocalDateTime item, boolean empty) {
 					super.updateItem(item, empty);
-					if(empty) {
+					if(empty || item == null) {
 						setText(null);
 					}
 					else {
@@ -226,7 +217,7 @@ public class FileSearchController implements Initializable {
 				@Override
 				protected void updateItem(LocalDateTime item, boolean empty) {
 					super.updateItem(item, empty);
-					if(empty) {
+					if(empty || item == null) {
 						setText(null);
 					}
 					else {
