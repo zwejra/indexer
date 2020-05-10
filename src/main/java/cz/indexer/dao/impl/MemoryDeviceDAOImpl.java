@@ -76,6 +76,20 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 	}
 
 	@Override
+	public boolean updateMemoryDevice(MemoryDevice memoryDevice) {
+		entityManager.getTransaction().begin();
+		logger.info("Transaction started.");
+
+		entityManager.persist(memoryDevice);
+		logger.info("Memory device: " + memoryDevice.toString() + " updated in database.");
+
+		entityManager.getTransaction().commit();
+		logger.info("Transaction commited.");
+
+		return true;
+	}
+
+	@Override
 	public boolean deleteMemoryDevice(MemoryDevice memoryDevice) {
 		entityManager.getTransaction().begin();
 		logger.info("Transaction started.");

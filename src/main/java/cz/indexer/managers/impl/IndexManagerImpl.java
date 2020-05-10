@@ -1,10 +1,8 @@
 package cz.indexer.managers.impl;
 
 import cz.indexer.dao.api.IndexedFileDAO;
-import cz.indexer.dao.api.MemoryDeviceDAO;
 import cz.indexer.dao.api.MetadataDAO;
 import cz.indexer.dao.impl.IndexedFileDAOImpl;
-import cz.indexer.dao.impl.MemoryDeviceDAOImpl;
 import cz.indexer.dao.impl.MetadataDAOImpl;
 import cz.indexer.managers.api.IndexManager;
 import cz.indexer.managers.api.MemoryDeviceManager;
@@ -15,21 +13,21 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class IndexManagerImpl implements IndexManager {
 
@@ -106,7 +104,157 @@ public class IndexManagerImpl implements IndexManager {
 
 	@Override
 	public boolean updateIndex(MemoryDevice memoryDevice) {
-		return false;
+		memoryDeviceManager.refreshMemoryDevices();
+		if (!memoryDevice.isConnected()) {
+			Alert alert = new Alert(Alert.AlertType.ERROR, "Zarizeni neni pripojeno, nelze aktualizovat index.");
+			alert.showAndWait();
+			return false;
+		}
+
+		Index indexToUpdate = memoryDevice.getIndex();
+
+		Set<String> indexedMetadataSet = getIndexedMetadataSet(memoryDevice.getIndex());
+		Set<String> disabledExtensionsSet = getDisabledExtensionsSet(memoryDevice.getIndex());
+		Set<String> disabledDirectoriesSet = getDisabledDirectoriesSet(memoryDevice.getIndex());
+
+		// Walk through file tree
+		Path start = new File(memoryDevice.getMount()).toPath();
+		try {
+			Files.walkFileTree(start,
+					new SimpleFileVisitor<Path>() {
+						@Override
+						public FileVisitResult visitFile(Path file,
+														 BasicFileAttributes attrs) throws IOException {
+							return FileVisitResult.CONTINUE;
+						}
+
+						@Override
+						public FileVisitResult visitFileFailed(Path file, IOException e)
+								throws IOException {
+							return FileVisitResult.SKIP_SUBTREE;
+						}
+
+						@Override
+						public FileVisitResult preVisitDirectory(Path dir,
+																 BasicFileAttributes attrs) throws IOException {
+							if (!isDirectoryIndexed(dir, memoryDevice, disabledDirectoriesSet)) {
+								logger.info("Skipped because directory {} is not indexed.", dir);
+								return FileVisitResult.SKIP_SUBTREE;
+							}
+
+							return FileVisitResult.CONTINUE;
+						}
+						
+						@Override
+						public FileVisitResult postVisitDirectory(Path dir,
+																  IOException e) throws IOException {
+							logger.info("Post visit directory: " + dir.toString());
+
+							try {
+								BasicFileAttributes attrs = Files.readAttributes(dir, BasicFileAttributes.class);
+
+								OffsetDateTime odt = OffsetDateTime.now(ZoneId.systemDefault());
+								ZoneOffset zoneOffset = odt.getOffset();
+								
+								if (attrs.lastModifiedTime().toInstant().isBefore(indexToUpdate.getLastModifiedTime().toInstant(zoneOffset))) {
+									logger.info("Nezmeneno. Pokracuj dal. " + dir.toString());
+									return FileVisitResult.CONTINUE;
+								}
+
+								String trimmedPath = memoryDeviceManager.trimMountFromPath(memoryDevice, dir.toFile());
+								HashMap<String, IndexedFile> indexedFilesInDirectory;
+								if (StringUtils.isBlank(trimmedPath)) {
+									indexedFilesInDirectory = indexedFileDAO.getFilesInDirectory(memoryDevice.getIndex(), trimmedPath, true);
+								} else {
+									indexedFilesInDirectory = indexedFileDAO.getFilesInDirectory(memoryDevice.getIndex(), trimmedPath, false);
+								}
+
+								List<IndexedFile> newFiles = new ArrayList<>();
+								List<IndexedFile> filesToUpdate = new ArrayList<>();
+								List<IndexedFile> filesToRemove = new ArrayList<>();
+
+								try (Stream<Path> stream = Files.list(dir)) {
+									stream.forEach(path -> {
+										File file = path.toFile();
+
+										if (!isFileExtensionIndexed(path, disabledExtensionsSet)) {
+											logger.info("File skipped because extension is not indexed. " + file);
+											return;
+										}
+
+										if (file.isDirectory()) {
+											try {
+												if (!isDirectoryIndexed(file.toPath(), memoryDevice, disabledDirectoriesSet)) {
+													logger.info("Skipped because directory {} is not indexed.", dir);
+													return;
+												}
+											} catch (IOException ioException) {
+												logger.error("Problem s odriznutim root adresare z cesty: " + dir.toString());
+												return;
+											}
+										}
+
+										try {
+											BasicFileAttributes fileAttrs = Files.readAttributes(path, BasicFileAttributes.class);
+
+											if (indexedFilesInDirectory.containsKey(file.getName())) {
+												IndexedFile indexedFile = indexedFilesInDirectory.get(file.getName());
+												indexedFilesInDirectory.remove(file.getName());
+
+												boolean changed = false;
+												if (indexedFile.getLastModifiedTime() != null) {
+													if (fileAttrs.lastModifiedTime().toInstant().isAfter(indexToUpdate.getLastModifiedTime().toInstant(zoneOffset))) {
+														setFileAttributes(path, fileAttrs, indexedFile, memoryDevice, indexedMetadataSet);
+														changed = true;
+													}
+												}
+
+												if (!changed && indexedFile.getLastAccessTime() != null) {
+													if (fileAttrs.lastAccessTime().toInstant().isAfter(indexToUpdate.getLastModifiedTime().toInstant(zoneOffset)))  {
+														setFileAttributes(path, fileAttrs, indexedFile, memoryDevice, indexedMetadataSet);
+														changed = true;
+													}
+												}
+
+												if (changed) filesToUpdate.add(indexedFile);
+
+											} else {
+												IndexedFile newIndexedFile = new IndexedFile();
+												setFileAttributes(path, fileAttrs, newIndexedFile, memoryDevice, indexedMetadataSet);
+												newFiles.add(newIndexedFile);
+											}
+										} catch (IOException ioException) {
+											logger.error("Cannot read basic attributes of file: " + path.toString());
+										}
+									});
+
+								} catch (IOException ioException) {
+									// ignore, no rights to read file
+								}
+
+								for(Map.Entry<String, IndexedFile> entry : indexedFilesInDirectory.entrySet()) {
+									filesToRemove.add(entry.getValue());
+								}
+
+								if (!newFiles.isEmpty()) indexedFileDAO.createFiles(newFiles);
+								if (!filesToUpdate.isEmpty()) indexedFileDAO.updateFiles(filesToUpdate);
+								if (!filesToRemove.isEmpty()) indexedFileDAO.deleteFiles(filesToRemove);
+
+							} catch (IOException ioException) {
+								logger.error("Problem s odriznutim root adresare z cesty: " + dir.toString());
+							}
+
+							return FileVisitResult.CONTINUE;
+						}
+					});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		memoryDevice.getIndex().setLastModifiedTime(LocalDateTime.now());
+		memoryDeviceManager.updateMemoryDevice(memoryDevice);
+
+		return true;
 	}
 
 	@Override
@@ -192,23 +340,9 @@ public class IndexManagerImpl implements IndexManager {
 	}
 
 	private void indexMemoryDevice(MemoryDevice memoryDevice) {
-		// Create hashmap with metadata name and object
-		Set<String> indexedMetadataSet = new HashSet<>();
-		for(Metadata metadata: memoryDevice.getIndex().getIndexedMetadata()) {
-			indexedMetadataSet.add(metadata.getValue().toString());
-		}
-
-		// Create set with non indexed extensions as strings
-		Set<String> disabledExtensionsSet = new HashSet<>();
-		for (NonIndexedExtension nonIndexedExtension: nonIndexedExtensions) {
-			disabledExtensionsSet.add(nonIndexedExtension.getExtension());
-		}
-
-		// Create set with non indexed directories as strings
-		Set<String> disabledDirectoriesSet = new HashSet<>();
-		for (NonIndexedDirectory nonIndexedDirectory: nonIndexedDirectories) {
-			disabledDirectoriesSet.add(nonIndexedDirectory.getPath());
-		}
+		Set<String> indexedMetadataSet = getIndexedMetadataSet(memoryDevice.getIndex());
+		Set<String> disabledExtensionsSet = getDisabledExtensionsSet(memoryDevice.getIndex());
+		Set<String> disabledDirectoriesSet = getDisabledDirectoriesSet(memoryDevice.getIndex());
 
 		List<IndexedFile> indexedFileBuffer = new ArrayList<>();
 		// Walk through file tree
@@ -255,6 +389,36 @@ public class IndexManagerImpl implements IndexManager {
 
 		indexedFileDAO.createFiles(indexedFileBuffer);
 		indexedFileBuffer.clear();
+	}
+
+	private Set<String> getIndexedMetadataSet(Index index) {
+		Set<String> indexedMetadataSet = new HashSet<>();
+
+		for(Metadata metadata: index.getIndexedMetadata()) {
+			indexedMetadataSet.add(metadata.getValue().toString());
+		}
+
+		return indexedMetadataSet;
+	}
+
+	private Set<String> getDisabledExtensionsSet(Index index) {
+		Set<String> disabledExtensionsSet = new HashSet<>();
+
+		for (NonIndexedExtension nonIndexedExtension: index.getNonIndexedExtensions()) {
+			disabledExtensionsSet.add(nonIndexedExtension.getExtension());
+		}
+
+		return disabledExtensionsSet;
+	}
+
+	private Set<String> getDisabledDirectoriesSet(Index index) {
+		Set<String> disabledDirectoriesSet = new HashSet<>();
+
+		for (NonIndexedDirectory nonIndexedDirectory: index.getNonIndexedDirectories()) {
+			disabledDirectoriesSet.add(nonIndexedDirectory.getPath());
+		}
+
+		return disabledDirectoriesSet;
 	}
 
 	private FileVisitResult createIndexedFile(Path file, BasicFileAttributes attrs, MemoryDevice memoryDevice,

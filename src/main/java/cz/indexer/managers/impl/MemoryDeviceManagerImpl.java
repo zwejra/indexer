@@ -124,6 +124,12 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 	}
 
 	@Override
+	public void updateMemoryDevice(MemoryDevice memoryDevice) {
+		memoryDeviceDAO.updateMemoryDevice(memoryDevice);
+		logger.info("Memory device: " + memoryDevice + " updated.");
+	}
+
+	@Override
 	public void deleteMemoryDevice(MemoryDevice memoryDevice) {
 		logger.info("Deleting of memory device {} started.", memoryDevice);
 

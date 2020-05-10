@@ -15,22 +15,22 @@
          <children>
             <VBox prefWidth="200.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" text="Připojená zařízení">
+                  <Label text="Připojená zařízení">
                      <font>
                         <Font size="18.0" />
                      </font>
-                     <padding>
-                        <Insets bottom="5.0" top="5.0" />
-                     </padding>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+                     </VBox.margin>
                   </Label>
                   <JFXListView fx:id="connectedMemoryDevicesListView" prefHeight="250.0" prefWidth="200.0" />
-                  <Label alignment="CENTER" prefHeight="40.0" prefWidth="200.0" text="Odpojená zařízení">
+                  <Label alignment="BOTTOM_LEFT" text="Odpojená zařízení">
                      <font>
                         <Font size="18.0" />
                      </font>
-                     <padding>
-                        <Insets bottom="5.0" top="5.0" />
-                     </padding>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+                     </VBox.margin>
                   </Label>
                   <JFXListView fx:id="disconnectedMemoryDevicesListView" prefHeight="250.0" prefWidth="200.0" />
                </children>

@@ -35,9 +35,7 @@ public class NonIndexedMemoryDeviceController implements Initializable {
 	private MemoryDevice selectedMemoryDevice;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
-	}
+	public void initialize(URL location, ResourceBundle resources) {}
 
 	public void setSelectedMemoryDevice(MemoryDevice memoryDevice) {
 		this.selectedMemoryDevice = memoryDevice;

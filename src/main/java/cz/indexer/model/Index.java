@@ -1,7 +1,5 @@
 package cz.indexer.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +19,7 @@ public class Index {
 	@Column(nullable = false)
 	@Getter @Setter private LocalDateTime lastModifiedTime;
 
-	@OneToOne(mappedBy = "index")
+	@OneToOne(mappedBy = "index", fetch = FetchType.EAGER)
 	@Getter private MemoryDevice memoryDevice;
 
 	@ManyToMany

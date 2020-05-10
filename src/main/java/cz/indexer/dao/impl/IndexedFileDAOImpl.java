@@ -3,6 +3,7 @@ package cz.indexer.dao.impl;
 import cz.indexer.dao.api.IndexedFileDAO;
 import cz.indexer.model.Index;
 import cz.indexer.model.IndexedFile;
+import cz.indexer.model.IndexedFile_;
 import cz.indexer.model.MemoryDevice;
 import cz.indexer.model.enums.DateCondition;
 import cz.indexer.model.enums.NameCondition;
@@ -10,7 +11,6 @@ import cz.indexer.model.enums.SizeCondition;
 import cz.indexer.model.gui.SearchDateValue;
 import cz.indexer.model.gui.SearchFileNameValue;
 import cz.indexer.model.gui.SearchSizeValue;
-import cz.indexer.model.IndexedFile_;
 import cz.indexer.tools.UtilTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +22,7 @@ import javax.persistence.criteria.*;
 import javax.persistence.metamodel.SingularAttribute;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class IndexedFileDAOImpl implements IndexedFileDAO {
@@ -55,12 +56,62 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	}
 
 	@Override
+	public HashMap<String, IndexedFile> getFilesInDirectory(Index index, String path, boolean isRoot) {
+		HashMap<String, IndexedFile> fileMap = new HashMap<>();
+
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<IndexedFile> criteriaQuery = criteriaBuilder.createQuery(IndexedFile.class);
+
+		List<Predicate> andPredicates = new ArrayList<>();
+
+		Root<IndexedFile> root = criteriaQuery.from(IndexedFile.class);
+		andPredicates.add(criteriaBuilder.equal(root.get(IndexedFile_.index), index));
+
+		if (!isRoot) {
+			Predicate pathLikeConditionWindows = criteriaBuilder.like(root.get(IndexedFile_.path), path + "\\%");
+			Predicate pathLikeConditionLinux = criteriaBuilder.like(root.get(IndexedFile_.path), path + "/%");
+			Predicate orLike = criteriaBuilder.or(pathLikeConditionWindows, pathLikeConditionLinux);
+			andPredicates.add(orLike);
+		}
+
+		andPredicates.add(criteriaBuilder.notLike(root.get(IndexedFile_.path), path + "_%/%"));
+		andPredicates.add(criteriaBuilder.notLike(root.get(IndexedFile_.path), path + "_%\\%"));
+
+		criteriaQuery.where(andPredicates.toArray(new Predicate[andPredicates.size()]));
+		TypedQuery<IndexedFile> query = entityManager.createQuery(criteriaQuery);
+		List<IndexedFile> results = query.getResultList();
+
+		for (IndexedFile result: results) {
+			if (path.equals(result.getPath())) continue;
+			fileMap.put(result.getFileName(), result);
+		}
+
+		return fileMap;
+	}
+
+	@Override
+	public boolean updateFiles(List<IndexedFile> indexedFiles) {
+		entityManager.getTransaction().begin();
+		logger.debug("Transaction started.");
+
+		for (IndexedFile fileToUpdate: indexedFiles) {
+			entityManager.persist(fileToUpdate);
+			logger.info("File updated in database. " + fileToUpdate);
+		}
+
+		entityManager.getTransaction().commit();
+		logger.debug("Transaction commited.");
+
+		return true;
+	}
+
+	@Override
 	public boolean createFile(IndexedFile file) {
 		entityManager.getTransaction().begin();
 		logger.debug("Transaction started.");
 
 		entityManager.persist(file);
-		logger.debug("New file: " + file.toString() + " stored to the database.");
+		logger.info("New file: " + file.toString() + " stored to the database.");
 
 		entityManager.getTransaction().commit();
 		logger.debug("Transaction commited.");
@@ -75,10 +126,11 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 
 		for (IndexedFile newFile: files) {
 			entityManager.persist(newFile);
-			logger.debug("New file: " + newFile.toString() + " stored to the database.");
+			logger.info("New file: " + newFile.toString() + " stored to the database.");
 		}
 
 		entityManager.getTransaction().commit();
+		entityManager.getEntityManagerFactory().getCache().evictAll();
 		logger.debug("Transaction commited.");
 
 		return true;
@@ -89,12 +141,8 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		entityManager.getTransaction().begin();
 		logger.debug("Transaction started.");
 
-		if (!entityManager.contains(file)) {
-			file = entityManager.merge(file);
-		}
-
 		entityManager.remove(file);
-		logger.debug("File: " + file.toString() + " removed from the database.");
+		logger.info("File: " + file.toString() + " removed from the database.");
 
 		entityManager.getTransaction().commit();
 		logger.debug("Transaction commited.");
@@ -107,13 +155,9 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		entityManager.getTransaction().begin();
 		logger.debug("Transaction started.");
 
-		if (!entityManager.contains(files)) {
-			files = entityManager.merge(files);
-		}
-
-		for (IndexedFile removedFile: files) {
-			entityManager.remove(removedFile);
-			logger.debug("File: " + removedFile.toString() + " removed from the database.");
+		for (IndexedFile fileToRemove: files) {
+			entityManager.remove(fileToRemove);
+			logger.info("File: " + fileToRemove.toString() + " removed from the database.");
 		}
 
 		entityManager.getTransaction().commit();
@@ -150,8 +194,7 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	public List<IndexedFile> searchFiles(List<MemoryDevice> devicesToSearch, SearchFileNameValue searchFileNameValue,
 										 SearchSizeValue searchSizeValue, SearchDateValue creationSearchDateValue,
 										 SearchDateValue lastAccessSearchDateValue, SearchDateValue lastModifiedSearchDateValue) {
-
-		System.out.println(devicesToSearch.toString());
+		entityManager.clear();
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<IndexedFile> criteriaQuery = criteriaBuilder.createQuery(IndexedFile.class);
@@ -228,7 +271,6 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	}
 
 	private List<Predicate> getPredicatesForIndexes(List<MemoryDevice> devicesToSearch, CriteriaBuilder criteriaBuilder, Root<IndexedFile> root) {
-
 		List<Predicate> indexPredicates = new ArrayList<>();
 
 		for (MemoryDevice memoryDevice: devicesToSearch) {

@@ -18,6 +18,8 @@ public interface MemoryDeviceManager {
 
 	void createMemoryDevice(MemoryDevice memoryDevice);
 
+	void updateMemoryDevice(MemoryDevice memoryDevice);
+
 	void deleteMemoryDevice(MemoryDevice memoryDevice);
 
 	String trimMountFromPath(MemoryDevice memoryDevice, File file) throws IOException;

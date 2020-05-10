@@ -33,7 +33,7 @@ public class IndexedFile {
 
 	private Long fileSize;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Index index;
 
 	@Enumerated(EnumType.STRING)
@@ -53,9 +53,7 @@ public class IndexedFile {
 	}
 
 	public String getAbsolutePath() {
-
-
-		MemoryDevice memoryDevice = getIndex().getMemoryDevice();
+		MemoryDevice memoryDevice = this.getIndex().getMemoryDevice();
 		memoryDevice = MemoryDeviceManagerImpl.getInstance().refreshConnectedMemoryDevice(memoryDevice);
 
 		if (memoryDevice.isConnected()) {
