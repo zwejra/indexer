@@ -1,5 +1,6 @@
 package cz.indexer.model;
 
+import cz.indexer.tools.I18N;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -77,7 +78,7 @@ public class MemoryDevice {
 			if (this.isIndexed()) {
 				return this.userDefinedName;
 			} else {
-				return "Error - shouldn't be here";
+				return I18N.getMessage("error.memory.device.to.string", this.uuid);
 			}
 		}
 	}

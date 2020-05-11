@@ -2,11 +2,8 @@ package cz.indexer.controllers.filesearch;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import cz.indexer.managers.api.IndexManager;
-import cz.indexer.managers.api.MemoryDeviceManager;
-import cz.indexer.managers.impl.IndexManagerImpl;
-import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
-import javafx.event.ActionEvent;
+import cz.indexer.model.enums.SizeCondition;
+import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import lombok.Getter;
@@ -17,30 +14,24 @@ import java.util.ResourceBundle;
 public class FileSizeFilterController implements Initializable {
 
 	@FXML
-	@Getter private JFXComboBox fileSizeComboBox;
+	@Getter private JFXComboBox<String> fileSizeComboBox;
 
 	@FXML
 	@Getter private JFXTextField fileSizeTextField;
 
-	private FileSearchController fileSearchController;
-
-	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
-	private IndexManager indexManager = IndexManagerImpl.getInstance();
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		refreshSizeFilterComboBox();
 	}
 
-	public void setFileSearchController(FileSearchController fileSearchController) {
-		this.fileSearchController = fileSearchController;
-	}
-
-	@FXML
-	public void handleFileSizeTextField(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleFileSizeComboBox(ActionEvent actionEvent) {
+	public void refreshSizeFilterComboBox() {
+		fileSizeComboBox.getItems().clear();
+		fileSizeComboBox.getItems().addAll(
+				I18N.getMessage(SizeCondition.SMALLER),
+				I18N.getMessage(SizeCondition.SMALLER_EQUAL),
+				I18N.getMessage(SizeCondition.EQUAL),
+				I18N.getMessage(SizeCondition.BIGGER),
+				I18N.getMessage(SizeCondition.BIGGER_EQUAL)
+		);
 	}
 }

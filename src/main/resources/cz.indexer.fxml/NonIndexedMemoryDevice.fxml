@@ -11,7 +11,7 @@
    <children>
       <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Paměťové médium není indexováno">
+            <Label fx:id="notIndexedLabel" text="%label.mediumNotIndexed">
                <font>
                   <Font size="24.0" />
                </font>
@@ -19,7 +19,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Label>
-            <Button mnemonicParsing="false" onAction="#handleCreateIndexButton" prefHeight="50.0" prefWidth="250.0" text="Vytvořit index" />
+            <Button fx:id="createButton" mnemonicParsing="false" onAction="#handleCreateIndexButton" prefHeight="50.0" prefWidth="250.0" text="%button.createIndex" />
          </children>
       </VBox>
    </children>

@@ -4,8 +4,8 @@ import cz.indexer.dao.api.MetadataDAO;
 import cz.indexer.dao.impl.MetadataDAOImpl;
 import cz.indexer.managers.api.DatabaseManager;
 import cz.indexer.model.Metadata;
-import cz.indexer.model.enums.FileType;
 import cz.indexer.model.enums.OptionalMetadata;
+import cz.indexer.tools.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +29,12 @@ public class DatabaseManagerImpl implements DatabaseManager {
 	private DatabaseManagerImpl() {}
 
 	public void initializeDatabase() {
+		logger.info(I18N.getMessage("info.database.initialize.started"));
+
 		// Get all optional metadata from the database
 		List<Metadata> existingMetadata = metadataDAO.getAllMetadata();
-
 		for (Metadata metadata: existingMetadata) {
-			logger.info("Existing metadata: " + metadata.toString());
+			logger.info(I18N.getMessage("info.database.initialize.metadata", metadata));
 		}
 
 		List<Metadata> newMetadata = new ArrayList<>();
@@ -50,6 +51,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
 		if (!newMetadata.isEmpty()) {
 			metadataDAO.createMetadata(newMetadata);
 		}
+		logger.info(I18N.getMessage("info.database.initialize.ended"));
 	}
 
 	private boolean doesMetadataAlreadyExist(List<Metadata> existingMetadata, Metadata possibleMetadata) {

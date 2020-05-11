@@ -16,9 +16,9 @@ import cz.indexer.model.enums.SizeCondition;
 import cz.indexer.model.gui.SearchDateValue;
 import cz.indexer.model.gui.SearchFileNameValue;
 import cz.indexer.model.gui.SearchSizeValue;
+import cz.indexer.tools.I18N;
 import cz.indexer.tools.UtilTools;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,7 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
@@ -66,7 +66,7 @@ public class FileSearchController implements Initializable {
 	@FXML
 	private TableColumn creationTimeTableColumn;
 	@FXML
-	private TableColumn lastChangeTimeTableColumn;
+	private TableColumn lastModifiedTimeTableColumn;
 	@FXML
 	private TableColumn lastAccessTimeTableColumn;
 
@@ -95,13 +95,13 @@ public class FileSearchController implements Initializable {
 	private Parent fileSizeFilter;
 
 	@FXML
-	private MemoryDeviceFilterController memoryDeviceFilterController;
+	@Getter private MemoryDeviceFilterController memoryDeviceFilterController;
 	@FXML
-	private FileNameFilterController fileNameFilterController;
+	@Getter private FileNameFilterController fileNameFilterController;
 	@FXML
-	private DateFilterController dateFilterController;
+	@Getter private DateFilterController dateFilterController;
 	@FXML
-	private FileSizeFilterController fileSizeFilterController;
+	@Getter private FileSizeFilterController fileSizeFilterController;
 
 	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
 	private IndexManager indexManager = IndexManagerImpl.getInstance();
@@ -109,12 +109,21 @@ public class FileSearchController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		rootBorderPane.setCenter(memoryDeviceFilter);
+		filtersLabel.textProperty().bind(I18N.createStringBinding("label.search.filters"));
+		searchResultsLabel.textProperty().bind(I18N.createStringBinding("label.search.results"));
+		memoryDeviceFilterButton.textProperty().bind(I18N.createStringBinding("button.search.memoryDevicesFilter"));
+		fileNameFilterButton.textProperty().bind(I18N.createStringBinding("button.search.filenameFilter"));
+		dateFilterButton.textProperty().bind(I18N.createStringBinding("button.search.dateFilter"));
+		fileSizeFilterButton.textProperty().bind(I18N.createStringBinding("button.search.filesizeFilter"));
+		searchButton.textProperty().bind(I18N.createStringBinding("button.search"));
+		nameTableColumn.textProperty().bind(I18N.createStringBinding("column.search.name"));
+		pathTableColumn.textProperty().bind(I18N.createStringBinding("column.search.path"));
+		sizeTableColumn.textProperty().bind(I18N.createStringBinding("column.search.size"));
+		creationTimeTableColumn.textProperty().bind(I18N.createStringBinding("column.search.creationTime"));
+		lastModifiedTimeTableColumn.textProperty().bind(I18N.createStringBinding("column.search.lastModifiedTime"));
+		lastAccessTimeTableColumn.textProperty().bind(I18N.createStringBinding("column.search.lastAccessTime"));
 
-		memoryDeviceFilterController.setFileSearchController(this);
-		fileNameFilterController.setFileSearchController(this);
-		dateFilterController.setFileSearchController(this);
-		fileSizeFilterController.setFileSearchController(this);
+		rootBorderPane.setCenter(memoryDeviceFilter);
 
 		resultsTableView.setItems(fileSearchManager.getSearchResults());
 		nameTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("fileName"));
@@ -122,7 +131,7 @@ public class FileSearchController implements Initializable {
 
 		sizeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, Long>("fileSize"));
 		creationTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("creationTime"));
-		lastChangeTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastAccessTime"));
+		lastModifiedTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastAccessTime"));
 		lastAccessTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastModifiedTime"));
 
 		ContextMenu cm = new ContextMenu();
@@ -210,7 +219,7 @@ public class FileSearchController implements Initializable {
 			return cell;
 		});
 
-		lastChangeTimeTableColumn.setCellFactory(column -> {
+		lastModifiedTimeTableColumn.setCellFactory(column -> {
 			TableCell<IndexedFile, LocalDateTime> cell = new TableCell<IndexedFile, LocalDateTime>() {
 				private DateTimeFormatter format = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
@@ -311,7 +320,7 @@ public class FileSearchController implements Initializable {
 		try {
 			size = Long.parseLong(sizeValue);
 		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Spatny format cisla velikosti souboru.");
+			throw new NumberFormatException(I18N.getMessage("exception.wrong.size.format"));
 		}
 
 		return new SearchSizeValue(size, sizeCondition);

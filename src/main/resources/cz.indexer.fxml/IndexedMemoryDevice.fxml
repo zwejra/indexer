@@ -11,7 +11,7 @@
    <children>
       <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="lastIndexUpdateLabel" alignment="CENTER" text="Posledni aktualizace indexu">
+            <Label fx:id="lastIndexUpdateLabel" alignment="CENTER" text="%label.lastIndexUpdate">
                <font>
                   <Font size="24.0" />
                </font>
@@ -21,12 +21,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="updateButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUpdateIndexActionButton" prefHeight="50.0" prefWidth="200.0" text="Aktualizovat index">
+            <Button fx:id="updateButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUpdateIndexActionButton" prefHeight="50.0" prefWidth="200.0" text="%button.updateIndex">
                <VBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteIndexActionButton" text="Odstranit index">
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteIndexActionButton" text="%button.deleteIndex">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

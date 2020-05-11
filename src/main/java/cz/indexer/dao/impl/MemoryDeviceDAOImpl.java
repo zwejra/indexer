@@ -2,7 +2,7 @@ package cz.indexer.dao.impl;
 
 import cz.indexer.dao.api.MemoryDeviceDAO;
 import cz.indexer.model.MemoryDevice;
-import cz.indexer.model.MemoryDevice_;
+import cz.indexer.tools.I18N;
 import cz.indexer.tools.UtilTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +32,53 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 
 	private MemoryDeviceDAOImpl() {}
 
+	@Override
+	public boolean createMemoryDevice(MemoryDevice memoryDevice) {
+		entityManager.getTransaction().begin();
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		entityManager.persist(memoryDevice);
+		logger.info(I18N.getMessage("info.transaction.memory.device.created", memoryDevice));
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+
+		return true;
+	}
+
+	@Override
+	public boolean updateMemoryDevice(MemoryDevice memoryDevice) {
+		entityManager.getTransaction().begin();
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		entityManager.persist(memoryDevice);
+		logger.info(I18N.getMessage("info.transaction.memory.device.updated", memoryDevice));
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+
+		return true;
+	}
+
+	@Override
+	public boolean deleteMemoryDevice(MemoryDevice memoryDevice) {
+		entityManager.getTransaction().begin();
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		if (!entityManager.contains(memoryDevice)) {
+			memoryDevice = entityManager.merge(memoryDevice);
+		}
+
+		entityManager.remove(memoryDevice);
+		logger.info(I18N.getMessage("info.transaction.memory.device.removed", memoryDevice));
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+
+		return true;
+	}
+
+	@Override
 	public HashMap<String, MemoryDevice> getAllMemoryDevices() {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MemoryDevice> criteriaQuery = criteriaBuilder.createQuery(MemoryDevice.class);
@@ -46,64 +91,5 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 		}
 
 		return mapWithAllDevices;
-	}
-
-	@Override
-	public MemoryDevice getMemoryDevice(String uuid) {
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<MemoryDevice> criteriaQuery = criteriaBuilder.createQuery(MemoryDevice.class);
-
-		Root<MemoryDevice> root = criteriaQuery.from(MemoryDevice.class);
-		Predicate condition = criteriaBuilder.equal(root.get(MemoryDevice_.uuid), uuid);
-		criteriaQuery.where(condition);
-		TypedQuery<MemoryDevice> query = entityManager.createQuery(criteriaQuery);
-
-		return query.getResultList().get(0);
-	}
-
-	@Override
-	public boolean createMemoryDevice(MemoryDevice memoryDevice) {
-		entityManager.getTransaction().begin();
-		logger.info("Transaction started.");
-
-		entityManager.persist(memoryDevice);
-		logger.info("New memory device: " + memoryDevice.toString() + " stored to the database.");
-
-		entityManager.getTransaction().commit();
-		logger.info("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public boolean updateMemoryDevice(MemoryDevice memoryDevice) {
-		entityManager.getTransaction().begin();
-		logger.info("Transaction started.");
-
-		entityManager.persist(memoryDevice);
-		logger.info("Memory device: " + memoryDevice.toString() + " updated in database.");
-
-		entityManager.getTransaction().commit();
-		logger.info("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteMemoryDevice(MemoryDevice memoryDevice) {
-		entityManager.getTransaction().begin();
-		logger.info("Transaction started.");
-
-		if (!entityManager.contains(memoryDevice)) {
-			memoryDevice = entityManager.merge(memoryDevice);
-		}
-
-		entityManager.remove(memoryDevice);
-		logger.info("Memory device: " + memoryDevice.toString() + " removed from the database.");
-
-		entityManager.getTransaction().commit();
-		logger.info("Transaction commited.");
-
-		return true;
 	}
 }

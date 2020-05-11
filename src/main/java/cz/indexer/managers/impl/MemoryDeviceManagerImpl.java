@@ -4,6 +4,8 @@ import cz.indexer.dao.api.MemoryDeviceDAO;
 import cz.indexer.dao.impl.MemoryDeviceDAOImpl;
 import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.model.MemoryDevice;
+import cz.indexer.model.exceptions.PathFromDifferentMemoryDeviceException;
+import cz.indexer.tools.I18N;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +15,7 @@ import oshi.SystemInfo;
 import oshi.software.os.OSFileStore;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Map;
 
 public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
@@ -92,19 +94,44 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 	}
 
 	@Override
-	public String trimMountFromPath(MemoryDevice memoryDevice, File file) throws IOException {
-		logger.debug("Mount: " + memoryDevice.getMount() + ", directory path: " + file.getAbsolutePath());
+	public void createMemoryDevice(MemoryDevice memoryDevice) {
+		logger.info(I18N.getMessage("info.memory.device.creation.started", memoryDevice));
+
+		memoryDeviceDAO.createMemoryDevice(memoryDevice);
+
+		logger.info(I18N.getMessage("info.memory.device.creation.finished", memoryDevice));
+	}
+
+	@Override
+	public void updateMemoryDevice(MemoryDevice memoryDevice) {
+		logger.info(I18N.getMessage("info.memory.device.update.started", memoryDevice));
+
+		memoryDeviceDAO.updateMemoryDevice(memoryDevice);
+
+		logger.info(I18N.getMessage("info.memory.device.update.finished", memoryDevice));
+	}
+
+	@Override
+	public void deleteMemoryDevice(MemoryDevice memoryDevice) {
+		logger.info(I18N.getMessage("info.memory.device.deleting.started", memoryDevice));
+
+		memoryDeviceDAO.deleteMemoryDevice(memoryDevice);
+
+		logger.info(I18N.getMessage("info.memory.device.deleting.finished", memoryDevice));
+	}
+
+	@Override
+	public String trimMountFromPath(MemoryDevice memoryDevice, File file) throws PathFromDifferentMemoryDeviceException {
 		if (!file.getAbsolutePath().contains(memoryDevice.getMount())) {
-			throw new IOException("Selected directory is not included at selected memory device.");
+			throw new PathFromDifferentMemoryDeviceException(I18N.getMessage("exception.path.not.on.memory.device", file.getAbsolutePath(), memoryDevice));
 		}
 		return StringUtils.stripStart(file.getAbsolutePath(), memoryDevice.getMount());
 	}
 
 	@Override
-	public boolean isUserDefinedNameValid(String memoryDeviceName) throws IOException {
-		logger.debug("Checking if user defined name: {} for memory device is valid", memoryDeviceName);
+	public boolean isUserDefinedNameValid(String memoryDeviceName) throws InputMismatchException {
 		if (StringUtils.isBlank(memoryDeviceName)) {
-			throw new IOException("Memory device name can't be empty.");
+			throw new InputMismatchException(I18N.getMessage("exception.memory.device.name.empty"));
 		}
 		return true;
 	}
@@ -115,26 +142,5 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 			if (memoryDevice.getUuid().equals(fileOwner.getUuid())) return memoryDevice;
 		}
 		return fileOwner;
-	}
-
-	@Override
-	public void createMemoryDevice(MemoryDevice memoryDevice) {
-		memoryDeviceDAO.createMemoryDevice(memoryDevice);
-		logger.info("Created memory device: " + memoryDevice);
-	}
-
-	@Override
-	public void updateMemoryDevice(MemoryDevice memoryDevice) {
-		memoryDeviceDAO.updateMemoryDevice(memoryDevice);
-		logger.info("Memory device: " + memoryDevice + " updated.");
-	}
-
-	@Override
-	public void deleteMemoryDevice(MemoryDevice memoryDevice) {
-		logger.info("Deleting of memory device {} started.", memoryDevice);
-
-		memoryDeviceDAO.deleteMemoryDevice(memoryDevice);
-
-		logger.info("Deleting of memory device {} finished.", memoryDevice);
 	}
 }

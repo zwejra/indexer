@@ -11,6 +11,7 @@ import cz.indexer.model.enums.SizeCondition;
 import cz.indexer.model.gui.SearchDateValue;
 import cz.indexer.model.gui.SearchFileNameValue;
 import cz.indexer.model.gui.SearchSizeValue;
+import cz.indexer.tools.I18N;
 import cz.indexer.tools.UtilTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +44,98 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	private IndexedFileDAOImpl() {}
 
 	@Override
-	public List<IndexedFile> getFiles(Index index) {
+	public boolean createFiles(List<IndexedFile> files) {
+		entityManager.getTransaction().begin();
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		for (IndexedFile newFile: files) {
+			entityManager.persist(newFile);
+			logger.info(I18N.getMessage("info.transaction.file.created", newFile.getPath()));
+		}
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+
+		entityManager.getEntityManagerFactory().getCache().evictAll();
+
+		return true;
+	}
+
+	@Override
+	public boolean updateFiles(List<IndexedFile> indexedFiles) {
+		entityManager.getTransaction().begin();
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		for (IndexedFile fileToUpdate: indexedFiles) {
+			entityManager.persist(fileToUpdate);
+			logger.info(I18N.getMessage("info.transaction.file.updated", fileToUpdate.getPath()));
+		}
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+
+		return true;
+	}
+
+	@Override
+	public boolean deleteFiles(List<IndexedFile> files) {
+		entityManager.getTransaction().begin();
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		for (IndexedFile fileToRemove: files) {
+			entityManager.remove(fileToRemove);
+			logger.info(I18N.getMessage("info.transaction.file.removed", fileToRemove.getPath()));
+		}
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+
+		return true;
+	}
+
+	@Override
+	public void deleteFiles(Index index) {
+		logger.debug(I18N.getMessage("debug.transaction.started"));
+		entityManager.getTransaction().begin();
+
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaDelete<IndexedFile> delete = cb.createCriteriaDelete(IndexedFile.class);
+
+		Root<IndexedFile> root = delete.from(IndexedFile.class);
+		Predicate condition = cb.equal(root.get(IndexedFile_.index), index);
+		delete.where(condition);
+		entityManager.createQuery(delete).executeUpdate();
+
+		logger.info(I18N.getMessage("info.transaction.files.of.memory.device.removed", index.getMemoryDevice().toString()));
+
+		entityManager.getTransaction().commit();
+		logger.debug(I18N.getMessage("debug.transaction.commited"));
+	}
+
+	@Override
+	public List<IndexedFile> searchFiles(List<MemoryDevice> devicesToSearch, SearchFileNameValue searchFileNameValue,
+										 SearchSizeValue searchSizeValue, SearchDateValue creationSearchDateValue,
+										 SearchDateValue lastAccessSearchDateValue, SearchDateValue lastModifiedSearchDateValue) {
+		entityManager.clear();
+
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<IndexedFile> criteriaQuery = criteriaBuilder.createQuery(IndexedFile.class);
-
 		Root<IndexedFile> root = criteriaQuery.from(IndexedFile.class);
-		Predicate condition = criteriaBuilder.equal(root.get(IndexedFile_.index), index);
-		criteriaQuery.where(condition);
+
+		List<Predicate> indexPredicates = getPredicatesForIndexes(devicesToSearch, criteriaBuilder, root);
+		Predicate orPredicate = criteriaBuilder.or(indexPredicates.toArray(new Predicate[indexPredicates.size()]));
+
+		List<Predicate> andPredicates = new ArrayList<>();
+		andPredicates.add(orPredicate);
+
+		if (searchFileNameValue != null) andPredicates.add(getFileNamePredicate(searchFileNameValue, criteriaBuilder, root));
+		if (searchSizeValue != null) andPredicates.add(getSizePredicate(searchSizeValue, criteriaBuilder, root));
+		if (creationSearchDateValue != null) andPredicates.add(getDatePredicate(creationSearchDateValue, criteriaBuilder, root, IndexedFile_.creationTime));
+		if (lastAccessSearchDateValue != null) andPredicates.add(getDatePredicate(lastAccessSearchDateValue, criteriaBuilder, root, IndexedFile_.lastAccessTime));
+		if (lastModifiedSearchDateValue != null) andPredicates.add(getDatePredicate(lastModifiedSearchDateValue, criteriaBuilder, root, IndexedFile_.lastModifiedTime));
+
+		criteriaQuery.where(criteriaBuilder.and(andPredicates.toArray(new Predicate[andPredicates.size()])));
+
 		TypedQuery<IndexedFile> query = entityManager.createQuery(criteriaQuery);
 
 		return query.getResultList();
@@ -89,141 +175,11 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		return fileMap;
 	}
 
-	@Override
-	public boolean updateFiles(List<IndexedFile> indexedFiles) {
-		entityManager.getTransaction().begin();
-		logger.debug("Transaction started.");
-
-		for (IndexedFile fileToUpdate: indexedFiles) {
-			entityManager.persist(fileToUpdate);
-			logger.info("File updated in database. " + fileToUpdate);
-		}
-
-		entityManager.getTransaction().commit();
-		logger.debug("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public boolean createFile(IndexedFile file) {
-		entityManager.getTransaction().begin();
-		logger.debug("Transaction started.");
-
-		entityManager.persist(file);
-		logger.info("New file: " + file.toString() + " stored to the database.");
-
-		entityManager.getTransaction().commit();
-		logger.debug("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public boolean createFiles(List<IndexedFile> files) {
-		entityManager.getTransaction().begin();
-		logger.debug("Transaction started.");
-
-		for (IndexedFile newFile: files) {
-			entityManager.persist(newFile);
-			logger.info("New file: " + newFile.toString() + " stored to the database.");
-		}
-
-		entityManager.getTransaction().commit();
-		entityManager.getEntityManagerFactory().getCache().evictAll();
-		logger.debug("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteFile(IndexedFile file) {
-		entityManager.getTransaction().begin();
-		logger.debug("Transaction started.");
-
-		entityManager.remove(file);
-		logger.info("File: " + file.toString() + " removed from the database.");
-
-		entityManager.getTransaction().commit();
-		logger.debug("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteFiles(List<IndexedFile> files) {
-		entityManager.getTransaction().begin();
-		logger.debug("Transaction started.");
-
-		for (IndexedFile fileToRemove: files) {
-			entityManager.remove(fileToRemove);
-			logger.info("File: " + fileToRemove.toString() + " removed from the database.");
-		}
-
-		entityManager.getTransaction().commit();
-		logger.debug("Transaction commited.");
-
-		return true;
-	}
-
-	@Override
-	public void deleteFiles(Index index) {
-		entityManager.getTransaction().begin();
-
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaDelete<IndexedFile> delete = cb.createCriteriaDelete(IndexedFile.class);
-
-		Root<IndexedFile> root = delete.from(IndexedFile.class);
-		Predicate condition = cb.equal(root.get(IndexedFile_.index), index);
-		delete.where(condition);
-		entityManager.createQuery(delete).executeUpdate();
-
-		entityManager.getTransaction().commit();
-	}
-
-	@Override
-	public List<IndexedFile> getAllFiles() {
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<IndexedFile> criteriaQuery = criteriaBuilder.createQuery(IndexedFile.class);
-		TypedQuery<IndexedFile> query = entityManager.createQuery(criteriaQuery);
-
-		return query.getResultList();
-	}
-
-	@Override
-	public List<IndexedFile> searchFiles(List<MemoryDevice> devicesToSearch, SearchFileNameValue searchFileNameValue,
-										 SearchSizeValue searchSizeValue, SearchDateValue creationSearchDateValue,
-										 SearchDateValue lastAccessSearchDateValue, SearchDateValue lastModifiedSearchDateValue) {
-		entityManager.clear();
-
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<IndexedFile> criteriaQuery = criteriaBuilder.createQuery(IndexedFile.class);
-		Root<IndexedFile> root = criteriaQuery.from(IndexedFile.class);
-
-		List<Predicate> indexPredicates = getPredicatesForIndexes(devicesToSearch, criteriaBuilder, root);
-		Predicate orPredicate = criteriaBuilder.or(indexPredicates.toArray(new Predicate[indexPredicates.size()]));
-
-		List<Predicate> andPredicates = new ArrayList<>();
-		andPredicates.add(orPredicate);
-
-		if (searchFileNameValue != null) andPredicates.add(getFileNamePredicate(searchFileNameValue, criteriaBuilder, root));
-		if (searchSizeValue != null) andPredicates.add(getSizePredicate(searchSizeValue, criteriaBuilder, root));
-		if (creationSearchDateValue != null) andPredicates.add(getDatePredicate(creationSearchDateValue, criteriaBuilder, root, IndexedFile_.creationTime));
-		if (lastAccessSearchDateValue != null) andPredicates.add(getDatePredicate(lastAccessSearchDateValue, criteriaBuilder, root, IndexedFile_.lastAccessTime));
-		if (lastModifiedSearchDateValue != null) andPredicates.add(getDatePredicate(lastModifiedSearchDateValue, criteriaBuilder, root, IndexedFile_.lastModifiedTime));
-
-		criteriaQuery.where(criteriaBuilder.and(andPredicates.toArray(new Predicate[andPredicates.size()])));
-
-		TypedQuery<IndexedFile> query = entityManager.createQuery(criteriaQuery);
-
-		return query.getResultList();
-	}
-
 	private Predicate getDatePredicate(SearchDateValue searchDateValue, CriteriaBuilder criteriaBuilder, Root<IndexedFile> root,
 									   SingularAttribute<IndexedFile, LocalDateTime> metamodelDateTime) {
 		Predicate predicate;
 
-		if (searchDateValue.getDateCondition().equals(DateCondition.FROM)) {
+		if (searchDateValue.getDateCondition().equals(DateCondition.AFTER)) {
 			predicate = criteriaBuilder.greaterThanOrEqualTo(root.get(metamodelDateTime), searchDateValue.getDateTime());
 		} else {
 			predicate = criteriaBuilder.lessThanOrEqualTo(root.get(metamodelDateTime), searchDateValue.getDateTime());
@@ -253,7 +209,7 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	private Predicate getFileNamePredicate(SearchFileNameValue searchFileNameValue, CriteriaBuilder criteriaBuilder, Root<IndexedFile> root) {
 		Predicate predicate;
 
-		if (searchFileNameValue.getNameCondition().equals(NameCondition.BEGINS_WITH)) {
+		if (searchFileNameValue.getNameCondition().equals(NameCondition.STARTS_WITH)) {
 			predicate = criteriaBuilder.like(criteriaBuilder.lower(root.get(IndexedFile_.fileName)),
 					searchFileNameValue.getSearchString().toLowerCase() + "%");
 		} else if (searchFileNameValue.getNameCondition().equals(NameCondition.ENDS_WITH)) {

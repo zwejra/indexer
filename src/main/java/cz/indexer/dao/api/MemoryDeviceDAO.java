@@ -6,13 +6,11 @@ import java.util.HashMap;
 
 public interface MemoryDeviceDAO {
 
-	HashMap<String, MemoryDevice> getAllMemoryDevices();
-
-	MemoryDevice getMemoryDevice(String uuid);
-
 	boolean	createMemoryDevice(MemoryDevice memoryDevice);
 
 	boolean updateMemoryDevice(MemoryDevice memoryDevice);
 
 	boolean deleteMemoryDevice(MemoryDevice memoryDevice);
+
+	HashMap<String, MemoryDevice> getAllMemoryDevices();
 }

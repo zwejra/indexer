@@ -20,7 +20,7 @@
                <children>
                   <HBox prefHeight="40.0" prefWidth="200.0">
                      <children>
-                        <Label text="Připojená zařízení">
+                        <Label fx:id="connectedDevicesLabel" text="%label.connectedDevices">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -45,7 +45,7 @@
                   <JFXListView fx:id="connectedMemoryDevicesListView" prefHeight="260.0" prefWidth="200.0" styleClass="memory-devices-list-view" />
                   <HBox prefHeight="40.0" prefWidth="200.0">
                      <children>
-                        <Label alignment="BOTTOM_LEFT" prefWidth="200.0" text="Odpojená zařízení">
+                        <Label fx:id="disconnectedDevicesLabel" alignment="BOTTOM_LEFT" prefWidth="200.0" text="%label.disconnectedDevices">
                            <font>
                               <Font size="16.0" />
                            </font>

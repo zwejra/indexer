@@ -1,10 +1,11 @@
 package cz.indexer.managers.api;
 
 import cz.indexer.model.MemoryDevice;
+import cz.indexer.model.exceptions.PathFromDifferentMemoryDeviceException;
 import javafx.collections.ObservableList;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.InputMismatchException;
 
 public interface MemoryDeviceManager {
 
@@ -22,9 +23,9 @@ public interface MemoryDeviceManager {
 
 	void deleteMemoryDevice(MemoryDevice memoryDevice);
 
-	String trimMountFromPath(MemoryDevice memoryDevice, File file) throws IOException;
+	String trimMountFromPath(MemoryDevice memoryDevice, File file) throws PathFromDifferentMemoryDeviceException;
 
-	boolean isUserDefinedNameValid(String memoryDeviceName) throws IOException;
+	boolean isUserDefinedNameValid(String memoryDeviceName) throws InputMismatchException;
 
 	MemoryDevice refreshConnectedMemoryDevice(MemoryDevice fileOwner);
 }

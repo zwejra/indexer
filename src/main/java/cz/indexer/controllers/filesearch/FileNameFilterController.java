@@ -2,11 +2,8 @@ package cz.indexer.controllers.filesearch;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import cz.indexer.managers.api.IndexManager;
-import cz.indexer.managers.api.MemoryDeviceManager;
-import cz.indexer.managers.impl.IndexManagerImpl;
-import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
-import javafx.event.ActionEvent;
+import cz.indexer.model.enums.NameCondition;
+import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import lombok.Getter;
@@ -22,26 +19,18 @@ public class FileNameFilterController implements Initializable {
 	@FXML
 	@Getter private JFXTextField fileNameTextField;
 
-	private FileSearchController fileSearchController;
-
-	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
-	private IndexManager indexManager = IndexManagerImpl.getInstance();
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		refreshNameComboBoxes();
 	}
 
-	public void setFileSearchController(FileSearchController fileSearchController) {
-		this.fileSearchController = fileSearchController;
-	}
-
-	@FXML
-	public void handleFileNameComboBox(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleFileNameTextField(ActionEvent actionEvent) {
-
+	public void refreshNameComboBoxes() {
+		fileNameComboBox.getItems().clear();
+		fileNameComboBox.getItems().addAll(
+				I18N.getMessage(NameCondition.CONTAINS),
+				I18N.getMessage(NameCondition.NOT_CONTAINS),
+				I18N.getMessage(NameCondition.STARTS_WITH),
+				I18N.getMessage(NameCondition.ENDS_WITH)
+		);
 	}
 }

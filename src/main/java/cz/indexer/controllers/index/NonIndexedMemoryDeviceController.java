@@ -5,6 +5,7 @@ import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.managers.impl.IndexManagerImpl;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
+import cz.indexer.tools.I18N;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,6 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,7 +27,13 @@ import java.util.ResourceBundle;
 
 public class NonIndexedMemoryDeviceController implements Initializable {
 
-	private static String CREATE_INDEX_DIALOG_FXML = "/cz.indexer.fxml/CreateIndexDialog.fxml";
+	private static final String CREATE_INDEX_DIALOG_FXML = "/cz.indexer.fxml/CreateIndexDialog.fxml";
+
+	@FXML
+	private Button createButton;
+
+	@FXML
+	private Label notIndexedLabel;
 
 	@FXML
 	private AnchorPane mainAnchorPane;
@@ -35,7 +44,10 @@ public class NonIndexedMemoryDeviceController implements Initializable {
 	private MemoryDevice selectedMemoryDevice;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {}
+	public void initialize(URL location, ResourceBundle resources) {
+		createButton.textProperty().bind(I18N.createStringBinding("button.createIndex"));
+		notIndexedLabel.textProperty().bind(I18N.createStringBinding("label.mediumNotIndexed"));
+	}
 
 	public void setSelectedMemoryDevice(MemoryDevice memoryDevice) {
 		this.selectedMemoryDevice = memoryDevice;
@@ -43,7 +55,7 @@ public class NonIndexedMemoryDeviceController implements Initializable {
 
 	@FXML
 	public void handleCreateIndexButton(ActionEvent actionEvent) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(CREATE_INDEX_DIALOG_FXML));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(CREATE_INDEX_DIALOG_FXML), I18N.getBundle());
 		Parent parent;
 
 		try {
@@ -63,7 +75,7 @@ public class NonIndexedMemoryDeviceController implements Initializable {
 				}
 			});
 
-			stage.setTitle("Vytvorit index: " + selectedMemoryDevice.toString());
+			stage.titleProperty().bind(I18N.createStringBinding("window.create.index.title"));
 			stage.setScene(scene);
 			stage.showAndWait();
 		} catch (IOException e) {

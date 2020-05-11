@@ -3,11 +3,8 @@ package cz.indexer.controllers.filesearch;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
-import cz.indexer.managers.api.IndexManager;
-import cz.indexer.managers.api.MemoryDeviceManager;
-import cz.indexer.managers.impl.IndexManagerImpl;
-import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
-import javafx.event.ActionEvent;
+import cz.indexer.model.enums.DateCondition;
+import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -47,54 +44,32 @@ public class DateFilterController implements Initializable {
 	@FXML
 	@Getter private JFXComboBox lastAccessDateComboBox;
 
-	private FileSearchController fileSearchController;
-
-	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
-	private IndexManager indexManager = IndexManagerImpl.getInstance();
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		creationDateLabel.textProperty().bind(I18N.createStringBinding("label.date.creationDate"));
+		lastModifiedDateLabel.textProperty().bind(I18N.createStringBinding("label.date.lastModifiedDate"));
+		lastAccessDateLabel.textProperty().bind(I18N.createStringBinding("label.date.lastAccessDate"));
 
+		refreshDateComboBoxes();
 	}
 
-	public void setFileSearchController(FileSearchController fileSearchController) {
-		this.fileSearchController = fileSearchController;
-	}
+	public void refreshDateComboBoxes() {
+		creationDateComboBox.getItems().clear();
+		creationDateComboBox.getItems().addAll(
+				I18N.getMessage(DateCondition.BEFORE),
+				I18N.getMessage(DateCondition.AFTER)
+		);
 
-	@FXML
-	public void handleCreationDateDatePicker(ActionEvent actionEvent) {
+		lastAccessDateComboBox.getItems().clear();
+		lastAccessDateComboBox.getItems().addAll(
+				I18N.getMessage(DateCondition.BEFORE),
+				I18N.getMessage(DateCondition.AFTER)
+		);
 
-	}
-
-	@FXML
-	public void handleCreationDateTimePicker(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleLastModifiedDateDatePicker(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleLastModifiedDateTimePicker(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleLastAccessDateDatePicker(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleLastAccessDateTimePicker(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleCreationDateComboBox(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleLastModifiedDateComboBox(ActionEvent actionEvent) {
-	}
-
-	@FXML
-	public void handleLastAccessDateComboBox(ActionEvent actionEvent) {
+		lastModifiedDateComboBox.getItems().clear();
+		lastModifiedDateComboBox.getItems().addAll(
+				I18N.getMessage(DateCondition.BEFORE),
+				I18N.getMessage(DateCondition.AFTER)
+		);
 	}
 }

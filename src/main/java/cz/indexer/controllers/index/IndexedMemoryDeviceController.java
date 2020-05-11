@@ -5,6 +5,8 @@ import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.managers.impl.IndexManagerImpl;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
+import cz.indexer.model.exceptions.MemoryDeviceNotConnectedException;
+import cz.indexer.tools.I18N;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -22,14 +23,14 @@ import java.util.ResourceBundle;
 public class IndexedMemoryDeviceController implements Initializable {
 
 	@FXML
-	public Button updateButton;
+	private Button updateButton;
 	@FXML
-	public Button deleteButton;
+	private Button deleteButton;
 
 	@FXML
-	public Label lastIndexUpdateValue;
+	private Label lastIndexUpdateValue;
 	@FXML
-	public Label lastIndexUpdateLabel;
+	private Label lastIndexUpdateLabel;
 
 	@FXML
 	private AnchorPane mainAnchorPane;
@@ -41,7 +42,9 @@ public class IndexedMemoryDeviceController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		updateButton.textProperty().bind(I18N.createStringBinding("button.updateIndex"));
+		deleteButton.textProperty().bind(I18N.createStringBinding("button.deleteIndex"));
+		lastIndexUpdateLabel.textProperty().bind(I18N.createStringBinding("label.lastIndexUpdate"));
 	}
 
 	public void setSelectedMemoryDevice(MemoryDevice memoryDevice) {
@@ -68,6 +71,11 @@ public class IndexedMemoryDeviceController implements Initializable {
 
 	@FXML
 	public void handleUpdateIndexActionButton(ActionEvent actionEvent) {
-		indexManager.updateIndex(selectedMemoryDevice);
+		try {
+			indexManager.updateIndex(selectedMemoryDevice);
+		} catch (MemoryDeviceNotConnectedException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR, e.toString());
+			alert.showAndWait();
+		}
 	}
 }

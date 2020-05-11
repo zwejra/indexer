@@ -9,36 +9,60 @@ import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
 import cz.indexer.model.NonIndexedDirectory;
 import cz.indexer.model.NonIndexedExtension;
+import cz.indexer.model.exceptions.PathFromDifferentMemoryDeviceException;
+import cz.indexer.tools.I18N;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 
 public class CreateIndexDialogController implements Initializable {
+
 	@FXML
 	private AnchorPane createIndexWindow;
+
+	@FXML
+	private Label memoryDeviceNameLabel;
+	@FXML
+	private Label indexedMetadataLabel;
+	@FXML
+	private Label excludeDirectoryLabel;
+	@FXML
+	private Label excludedDirectoriesLabel;
+	@FXML
+	private Label excludeFileExtensionLabel;
+	@FXML
+	private Label excludedFileExtensionsLabel;
+
+	@FXML
+	private Button browseDirectoriesButton;
+	@FXML
+	private Button removeDirectoryButton;
+	@FXML
+	private Button addFileExtensionButton;
+	@FXML
+	private Button removeExtensionButton;
+	@FXML
+	private Button cancelButton;
+	@FXML
+	private Button createIndexButton;
 
 	@FXML
 	private JFXTextField mediaNameTextField;
 	@FXML
 	private JFXTextField extensionTextField;
-
-	@FXML
-	private Button cancelButton;
-	@FXML
-	private Button createIndexButton;
 
 	@FXML
 	private JFXListView<IndexManagerImpl.MetadataForIndexing> indexedMetadataListView  = new JFXListView<>();
@@ -56,6 +80,19 @@ public class CreateIndexDialogController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		memoryDeviceNameLabel.textProperty().bind(I18N.createStringBinding("label.create.memoryDeviceName"));
+		indexedMetadataLabel.textProperty().bind(I18N.createStringBinding("label.create.indexedMetadata"));
+		excludeDirectoryLabel.textProperty().bind(I18N.createStringBinding("label.create.excludeDirectory"));
+		excludedDirectoriesLabel.textProperty().bind(I18N.createStringBinding("label.create.excludedDirectories"));
+		excludeFileExtensionLabel.textProperty().bind(I18N.createStringBinding("label.create.excludeFileExtension"));
+		excludedFileExtensionsLabel.textProperty().bind(I18N.createStringBinding("label.create.excludedFileExtensions"));
+		browseDirectoriesButton.textProperty().bind(I18N.createStringBinding("button.create.browseDirectories"));
+		removeDirectoryButton.textProperty().bind(I18N.createStringBinding("button.create.removeDirectory"));
+		addFileExtensionButton.textProperty().bind(I18N.createStringBinding("button.create.addFileExtension"));
+		removeExtensionButton.textProperty().bind(I18N.createStringBinding("button.create.removeExtension"));
+		cancelButton.textProperty().bind(I18N.createStringBinding("button.create.cancel"));
+		createIndexButton.textProperty().bind(I18N.createStringBinding("button.create.createIndex"));
+
 		indexedMetadataListView.setItems(indexManager.getMetadataForIndexing());
 		indexedMetadataListView.setCellFactory(CheckBoxListCell.forListView(IndexManagerImpl.MetadataForIndexing::onProperty));
 
@@ -75,7 +112,7 @@ public class CreateIndexDialogController implements Initializable {
 
 			Stage stage = (Stage) createIndexButton.getScene().getWindow();
 			stage.close();
-		} catch (IOException e) {
+		} catch (InputMismatchException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
 			alert.showAndWait();
 		}
@@ -88,7 +125,7 @@ public class CreateIndexDialogController implements Initializable {
 
 		try {
 			indexManager.addNonIndexedDirectory(selectedDirectory, selectedMemoryDevice);
-		} catch (IOException e) {
+		} catch (PathFromDifferentMemoryDeviceException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
 			alert.showAndWait();
 		}
@@ -107,7 +144,7 @@ public class CreateIndexDialogController implements Initializable {
 		try {
 			indexManager.addNonIndexedExtension(extensionTextField.getText());
 			extensionTextField.clear();
-		} catch (IOException e) {
+		} catch (InputMismatchException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
 			alert.showAndWait();
 		}

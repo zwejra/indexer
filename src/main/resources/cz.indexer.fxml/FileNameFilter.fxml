@@ -15,17 +15,17 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <JFXComboBox fx:id="fileNameComboBox" onAction="#handleFileNameComboBox" prefWidth="100.0">
+                  <JFXComboBox fx:id="fileNameComboBox" prefWidth="100.0">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="obsahuje"/>
-                           <String fx:value="neobsahuje"/>
-                           <String fx:value="začíná"/>
-                           <String fx:value="končí"/>
+                           <String fx:value="contains" />
+                           <String fx:value="not contains" />
+                           <String fx:value="begins with" />
+                           <String fx:value="ends with" />
                         </FXCollections>
                      </items>
                   </JFXComboBox>
-                  <JFXTextField fx:id="fileNameTextField" onAction="#handleFileNameTextField">
+                  <JFXTextField fx:id="fileNameTextField">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>

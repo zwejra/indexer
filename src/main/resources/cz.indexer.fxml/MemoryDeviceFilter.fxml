@@ -13,12 +13,12 @@
          <children>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
                <children>
-                  <JFXRadioButton fx:id="chooseDevicesRadioButton" onAction="#handleChooseDevicesRadioButton" text="Vybraná paměťová média">
+                  <JFXRadioButton fx:id="chooseDevicesRadioButton" onAction="#handleChooseDevicesRadioButton" text="%button.search.chooseDevices">
                      <padding>
                         <Insets right="20.0" />
                      </padding>
                   </JFXRadioButton>
-                  <JFXRadioButton fx:id="allDevicesRadioButton" onAction="#handleAllDevicesRadioButton" text="Všechna indexovaná média" />
+                  <JFXRadioButton fx:id="allDevicesRadioButton" onAction="#handleAllDevicesRadioButton" text="%button.search.allDevices" />
                </children>
             </HBox>
             <CheckListView fx:id="memoryDevicesCheckListView" prefHeight="270.0">

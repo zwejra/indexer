@@ -29,36 +29,36 @@
                   <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="creationDateLabel" text="Datum vytvoření" />
-                  <Label fx:id="lastModifiedDateLabel" text="Datum změny" GridPane.columnIndex="1" />
-                  <Label fx:id="lastAccessDateLabel" text="Datum posledního přístupu" GridPane.columnIndex="2" />
-                  <JFXDatePicker fx:id="creationDateDatePicker" onAction="#handleCreationDateDatePicker" prefWidth="180.0" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="creationDateTimePicker" onAction="#handleCreationDateTimePicker" prefWidth="180.0" GridPane.rowIndex="3" />
-                  <JFXDatePicker fx:id="lastModifiedDateDatePicker" onAction="#handleLastModifiedDateDatePicker" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="lastModifiedDateTimePicker" onAction="#handleLastModifiedDateTimePicker" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <JFXDatePicker fx:id="lastAccessDateDatePicker" onAction="#handleLastAccessDateDatePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="lastAccessDateTimePicker" onAction="#handleLastAccessDateTimePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <JFXComboBox fx:id="creationDateComboBox" onAction="#handleCreationDateComboBox" prefWidth="180.0" GridPane.rowIndex="1">
+                  <Label fx:id="creationDateLabel" text="%label.date.creationDate" />
+                  <Label fx:id="lastModifiedDateLabel" text="%label.date.lastModifiedDate" GridPane.columnIndex="1" />
+                  <Label fx:id="lastAccessDateLabel" text="%label.date.lastAccessDate" GridPane.columnIndex="2" />
+                  <JFXDatePicker fx:id="creationDateDatePicker" prefWidth="180.0" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="creationDateTimePicker" prefWidth="180.0" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="lastModifiedDateDatePicker"  prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="lastModifiedDateTimePicker" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="lastAccessDateDatePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="lastAccessDateTimePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <JFXComboBox fx:id="creationDateComboBox" prefWidth="180.0" GridPane.rowIndex="1">
                       <items>
                           <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="od"/>
-                              <String fx:value="do"/>
+                              <String fx:value="before" />
+                              <String fx:value="after" />
                           </FXCollections>
                       </items>
                   </JFXComboBox>
-                  <JFXComboBox fx:id="lastModifiedDateComboBox" onAction="#handleLastModifiedDateComboBox" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <JFXComboBox fx:id="lastModifiedDateComboBox" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                       <items>
                           <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="od"/>
-                              <String fx:value="do"/>
+                              <String fx:value="before" />
+                              <String fx:value="after" />
                           </FXCollections>
                       </items>
                   </JFXComboBox>
-                   <JFXComboBox fx:id="lastAccessDateComboBox" onAction="#handleLastAccessDateComboBox" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                   <JFXComboBox fx:id="lastAccessDateComboBox" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                        <items>
                            <FXCollections fx:factory="observableArrayList">
-                               <String fx:value="od"/>
-                               <String fx:value="do"/>
+                               <String fx:value="before" />
+                               <String fx:value="after" />
                            </FXCollections>
                        </items>
                    </JFXComboBox>

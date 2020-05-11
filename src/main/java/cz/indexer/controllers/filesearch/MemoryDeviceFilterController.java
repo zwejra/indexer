@@ -1,11 +1,10 @@
 package cz.indexer.controllers.filesearch;
 
 import com.jfoenix.controls.JFXRadioButton;
-import cz.indexer.managers.api.IndexManager;
 import cz.indexer.managers.api.MemoryDeviceManager;
-import cz.indexer.managers.impl.IndexManagerImpl;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
+import cz.indexer.tools.I18N;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,13 +25,13 @@ public class MemoryDeviceFilterController implements Initializable {
 	@FXML
 	@Getter private CheckListView<MemoryDevice> memoryDevicesCheckListView = new CheckListView();
 
-	private FileSearchController fileSearchController;
-
 	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
-	private IndexManager indexManager = IndexManagerImpl.getInstance();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		chooseDevicesRadioButton.textProperty().bind(I18N.createStringBinding("button.search.chooseDevices"));
+		allDevicesRadioButton.textProperty().bind(I18N.createStringBinding("button.search.allDevices"));
+
 		memoryDevicesCheckListView.setItems(memoryDeviceManager.getIndexedMemoryDevices());
 		memoryDevicesCheckListView.getCheckModel().checkAll();
 
@@ -49,10 +48,6 @@ public class MemoryDeviceFilterController implements Initializable {
 		allDevicesRadioButton.setSelected(true);
 		chooseDevicesRadioButton.setSelected(false);
 		memoryDevicesCheckListView.setDisable(true);
-	}
-
-	public void setFileSearchController(FileSearchController fileSearchController) {
-		this.fileSearchController = fileSearchController;
 	}
 
 	@FXML

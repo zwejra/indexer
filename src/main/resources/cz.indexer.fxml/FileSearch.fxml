@@ -26,7 +26,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="searchResultsLabel" text="Výsledky vyhledávání">
+                  <Label fx:id="searchResultsLabel" text="%label.search.results">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -34,7 +34,7 @@
                         <Insets bottom="5.0" left="10.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="searchButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSearchActionButton" prefHeight="35.0" prefWidth="150.0" text="Vyhledat" GridPane.columnIndex="1">
+                  <Button fx:id="searchButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSearchActionButton" prefHeight="35.0" prefWidth="150.0" text="%button.search" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin></Button>
@@ -42,12 +42,12 @@
             </GridPane>
             <TableView fx:id="resultsTableView" prefHeight="230.0" prefWidth="800.0">
               <columns>
-                  <TableColumn fx:id="nameTableColumn" prefWidth="163.0" text="Název" />
-                <TableColumn fx:id="pathTableColumn" prefWidth="145.0" text="Cesta" />
-                <TableColumn fx:id="sizeTableColumn" prefWidth="78.0" text="Velikost" />
-                  <TableColumn fx:id="creationTimeTableColumn" minWidth="0.0" prefWidth="123.0" text="Čas vytvoření" />
-                  <TableColumn fx:id="lastChangeTimeTableColumn" prefWidth="134.0" text="Čas poslední změny" />
-                  <TableColumn fx:id="lastAccessTimeTableColumn" minWidth="0.0" prefWidth="156.0" text="Čas posledního přístupu" />
+                  <TableColumn fx:id="nameTableColumn" prefWidth="163.0" text="%column.search.name" />
+                <TableColumn fx:id="pathTableColumn" prefWidth="145.0" text="%column.search.path" />
+                <TableColumn fx:id="sizeTableColumn" prefWidth="78.0" text="%column.search.size" />
+                  <TableColumn fx:id="creationTimeTableColumn" minWidth="0.0" prefWidth="123.0" text="%column.search.creationTime" />
+                  <TableColumn fx:id="lastModifiedTimeTableColumn" prefWidth="134.0" text="%column.search.lastModifiedTime" />
+                  <TableColumn fx:id="lastAccessTimeTableColumn" minWidth="0.0" prefWidth="156.0" text="%column.search.lastAccessTime" />
               </columns>
             </TableView>
          </children>
@@ -56,7 +56,7 @@
    <left>
       <VBox alignment="TOP_CENTER" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="filtersLabel" prefHeight="30.0" text="Filtry">
+            <Label fx:id="filtersLabel" prefHeight="30.0" text="%label.search.filters">
                <font>
                   <Font size="18.0" />
                </font>
@@ -64,10 +64,10 @@
                   <Insets bottom="5.0" top="5.0" />
                </VBox.margin>
             </Label>
-            <JFXButton fx:id="memoryDeviceFilterButton" onAction="#handleMemoryDeviceFilterButton" prefHeight="50.0" prefWidth="200.0" text="Paměťové médium" />
-            <JFXButton fx:id="fileNameFilterButton" onAction="#handleFileNameFilterButton" prefHeight="50.0" prefWidth="200.0" text="Název souboru" />
-            <JFXButton fx:id="dateFilterButton" onAction="#handleDateFilterButton" prefHeight="50.0" prefWidth="200.0" text="Datum" />
-            <JFXButton fx:id="fileSizeFilterButton" onAction="#handleFileSizeFilterButton" prefHeight="50.0" prefWidth="200.0" text="Velikost" />
+            <JFXButton fx:id="memoryDeviceFilterButton" onAction="#handleMemoryDeviceFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.memoryDevicesFilter" />
+            <JFXButton fx:id="fileNameFilterButton" onAction="#handleFileNameFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.filenameFilter" />
+            <JFXButton fx:id="dateFilterButton" onAction="#handleDateFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.dateFilter" />
+            <JFXButton fx:id="fileSizeFilterButton" onAction="#handleFileSizeFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.filesizeFilter" />
          </children>
       </VBox>
    </left>

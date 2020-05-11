@@ -6,6 +6,7 @@ import cz.indexer.managers.api.MemoryDeviceManager;
 import cz.indexer.managers.impl.IndexManagerImpl;
 import cz.indexer.managers.impl.MemoryDeviceManagerImpl;
 import cz.indexer.model.MemoryDevice;
+import cz.indexer.tools.I18N;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -14,7 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -23,9 +24,16 @@ import java.util.ResourceBundle;
 
 public class IndexManagementController implements Initializable {
 
-	private static String NON_INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/NonIndexedMemoryDevice.fxml";
-	private static String INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/IndexedMemoryDevice.fxml";
-	public Button refreshButton;
+	private static final String NON_INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/NonIndexedMemoryDevice.fxml";
+	private static final String INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/IndexedMemoryDevice.fxml";
+
+	@FXML
+	private Pane memoryDeviceInfoPane;
+
+	@FXML
+	private Label connectedDevicesLabel;
+	@FXML
+	private Label disconnectedDevicesLabel;
 
 	@FXML
 	private JFXListView<MemoryDevice> connectedMemoryDevicesListView = new JFXListView<>();
@@ -33,42 +41,36 @@ public class IndexManagementController implements Initializable {
 	@FXML
 	private JFXListView<MemoryDevice> disconnectedMemoryDevicesListView = new JFXListView<>();
 
-	@FXML
-	private Pane memoryDeviceInfoPane = new Pane();
-
 	private MemoryDeviceManager memoryDeviceManager = MemoryDeviceManagerImpl.getInstance();
 	private IndexManager indexManager = IndexManagerImpl.getInstance();
 
-	private MemoryDevice selectedMemoryDevice;
-
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		connectedDevicesLabel.textProperty().bind(I18N.createStringBinding("label.connectedDevices"));
+		disconnectedDevicesLabel.textProperty().bind(I18N.createStringBinding("label.disconnectedDevices"));
+
 		connectedMemoryDevicesListView.setItems(memoryDeviceManager.getConnectedMemoryDevices());
 		disconnectedMemoryDevicesListView.setItems(memoryDeviceManager.getDisconnectedMemoryDevices());
 		memoryDeviceManager.refreshMemoryDevices();
 
 		connectedMemoryDevicesListView.getSelectionModel().selectedItemProperty().addListener(
 				new ChangeListener<MemoryDevice>() {
-
 					@Override
 					public void changed(ObservableValue<? extends MemoryDevice> observable, MemoryDevice oldValue, MemoryDevice newValue) {
 						if (newValue != null) {
 							disconnectedMemoryDevicesListView.getSelectionModel().clearSelection();
 							setMemoryDeviceInfoPane(newValue);
-							selectedMemoryDevice = newValue;
 						}
 					}
 				});
 
 		disconnectedMemoryDevicesListView.getSelectionModel().selectedItemProperty().addListener(
 				new ChangeListener<MemoryDevice>() {
-
 					@Override
 					public void changed(ObservableValue<? extends MemoryDevice> observable, MemoryDevice oldValue, MemoryDevice newValue) {
 						if (newValue != null) {
 							connectedMemoryDevicesListView.getSelectionModel().clearSelection();
 							setMemoryDeviceInfoPane(newValue);
-							selectedMemoryDevice = newValue;
 						}
 					}
 				});
@@ -79,12 +81,14 @@ public class IndexManagementController implements Initializable {
 		try {
 			if (memoryDevice != null) {
 				if (memoryDevice.isIndexed()) {
-					loader = new FXMLLoader(getClass().getResource(INDEXED_MEMORY_DEVICE_FXML));
+					loader = new FXMLLoader(getClass().getResource(INDEXED_MEMORY_DEVICE_FXML), I18N.getBundle());
 					memoryDeviceInfoPane.getChildren().setAll((Node) loader.load());
 					IndexedMemoryDeviceController indexedMemoryDeviceController = loader.getController();
 					indexedMemoryDeviceController.setSelectedMemoryDevice(memoryDevice);
+
+
 				} else {
-					loader = new FXMLLoader(getClass().getResource(NON_INDEXED_MEMORY_DEVICE_FXML));
+					loader = new FXMLLoader(getClass().getResource(NON_INDEXED_MEMORY_DEVICE_FXML), I18N.getBundle());
 					memoryDeviceInfoPane.getChildren().setAll((Node) loader.load());
 					NonIndexedMemoryDeviceController nonIndexedMemoryDeviceController = loader.getController();
 					nonIndexedMemoryDeviceController.setSelectedMemoryDevice(memoryDevice);

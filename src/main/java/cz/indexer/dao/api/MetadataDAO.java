@@ -6,10 +6,6 @@ import java.util.List;
 
 public interface MetadataDAO {
 
-	Metadata getMetadata(String name);
-
-	List<Metadata> getAllMetadata();
-
 	boolean createMetadata(Metadata metadata);
 
 	boolean createMetadata(List<Metadata> metadataList);
@@ -17,4 +13,8 @@ public interface MetadataDAO {
 	boolean deleteMetadata(Metadata metadata);
 
 	boolean deleteMetadata(List<Metadata> metadata);
+
+	Metadata getMetadata(String name);
+
+	List<Metadata> getAllMetadata();
 }

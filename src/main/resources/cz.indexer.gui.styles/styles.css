@@ -7,3 +7,9 @@
 .memory-devices-list-view {
     -fx-background-insets: 0 1;
 }
+
+.footer {
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
+}
