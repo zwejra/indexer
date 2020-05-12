@@ -1,5 +1,7 @@
 package cz.indexer.managers.impl;
 
+import cz.indexer.controllers.index.CreateIndexDialogController;
+import cz.indexer.controllers.index.ProgressDialogController;
 import cz.indexer.dao.api.IndexedFileDAO;
 import cz.indexer.dao.api.MetadataDAO;
 import cz.indexer.dao.impl.IndexedFileDAOImpl;
@@ -16,7 +18,17 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.persistence.internal.sessions.factories.ObjectPersistenceRuntimeXMLProject_11_1_1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,32 +88,9 @@ public class IndexManagerImpl implements IndexManager {
 	}
 
 	@Override
-	public boolean createIndex(MemoryDevice memoryDevice, String memoryDeviceName) throws InputMismatchException {
-		// Check and set name
-		memoryDeviceManager.isUserDefinedNameValid(memoryDeviceName);
-		memoryDevice.setUserDefinedName(memoryDeviceName);
-
-		// Create index
-		Index newIndex = new Index();
-		newIndex.setLastModifiedTime(LocalDateTime.now());
-
-		for (MetadataForIndexing m: metadataForIndexing) {
-			if (m.isOn()) {
-				newIndex.getIndexedMetadata().add(m.getMetadata());
-			}
-		}
-		newIndex.getNonIndexedDirectories().addAll(nonIndexedDirectories);
-		newIndex.getNonIndexedExtensions().addAll(nonIndexedExtensions);
-
-		// Set index in memory device and save it to the database
-		memoryDevice.setIndex(newIndex);
-		memoryDeviceManager.createMemoryDevice(memoryDevice);
-
-		logger.info(I18N.getMessage("info.indexing.started", memoryDevice));
-		indexMemoryDevice(memoryDevice);
-		logger.info(I18N.getMessage("info.indexing.finished", memoryDevice));
-
-		return true;
+	public Task<Void> getCreateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException {
+		CreateIndexTask task = new CreateIndexTask(memoryDevice);
+		return task;
 	}
 
 	@Override
@@ -258,27 +247,168 @@ public class IndexManagerImpl implements IndexManager {
 		}
 	}
 
-	private void indexMemoryDevice(MemoryDevice memoryDevice) {
-		Set<String> indexedMetadataSet = getIndexedMetadataSet(memoryDevice.getIndex());
-		Set<String> disabledExtensionsSet = getDisabledExtensionsSet(memoryDevice.getIndex());
-		Set<String> disabledDirectoriesSet = getDisabledDirectoriesSet(memoryDevice.getIndex());
+	public class CreateIndexTask extends Task<Void> {
+		private Long totalIterations;
+		private final MemoryDevice memoryDevice;
 
-		List<IndexedFile> indexedFileBuffer = new ArrayList<>();
+		public CreateIndexTask(MemoryDevice memoryDevice) {
+			this.memoryDevice = memoryDevice;
+			totalIterations = Long.valueOf(-1);
+		}
+
+		@Override protected Void call() throws Exception {
+			// Create index
+			Index newIndex = new Index();
+			newIndex.setLastModifiedTime(LocalDateTime.now());
+
+			for (MetadataForIndexing m: metadataForIndexing) {
+				if (m.isOn()) {
+					newIndex.getIndexedMetadata().add(m.getMetadata());
+				}
+			}
+			newIndex.getNonIndexedDirectories().addAll(nonIndexedDirectories);
+			newIndex.getNonIndexedExtensions().addAll(nonIndexedExtensions);
+
+			// Set index in memory device and save it to the database
+			memoryDevice.setIndex(newIndex);
+			memoryDeviceManager.createMemoryDevice(memoryDevice);
+
+			logger.info(I18N.getMessage("info.indexing.started", memoryDevice));
+			indexMemoryDevice(memoryDevice);
+			logger.info(I18N.getMessage("info.indexing.finished", memoryDevice));
+
+			return null;
+		}
+
+		private void indexMemoryDevice(MemoryDevice memoryDevice) {
+			Set<String> indexedMetadataSet = getIndexedMetadataSet(memoryDevice.getIndex());
+			Set<String> disabledExtensionsSet = getDisabledExtensionsSet(memoryDevice.getIndex());
+			Set<String> disabledDirectoriesSet = getDisabledDirectoriesSet(memoryDevice.getIndex());
+
+			totalIterations = getDirectoriesCount(memoryDevice, disabledDirectoriesSet);
+
+			List<IndexedFile> indexedFileBuffer = new ArrayList<>();
+			final Long[] iterations = {Long.valueOf(0)};
+			// Walk through file tree
+			Path start = new File(memoryDevice.getMount()).toPath();
+			try {
+				Files.walkFileTree(start,
+						new SimpleFileVisitor<Path>() {
+							@Override
+							public FileVisitResult visitFile(Path file,
+															 BasicFileAttributes attrs) throws IOException {
+
+								if (!isFileExtensionIndexed(file, disabledExtensionsSet)) {
+									logger.debug(I18N.getMessage("debug.index.extension.skipped", file));
+									return FileVisitResult.CONTINUE;
+								}
+
+								return createIndexedFile(file, attrs, memoryDevice, indexedMetadataSet, indexedFileBuffer);
+							}
+
+							@Override
+							public FileVisitResult visitFileFailed(Path file, IOException e)
+									throws IOException {
+								return FileVisitResult.SKIP_SUBTREE;
+							}
+
+							@Override
+							public FileVisitResult preVisitDirectory(Path dir,
+																	 BasicFileAttributes attrs) throws IOException {
+
+								if (isCancelled()) {
+									return FileVisitResult.TERMINATE;
+								}
+
+								updateProgress(++iterations[0], totalIterations);
+								if (!isDirectoryIndexed(dir, memoryDevice, disabledDirectoriesSet)) {
+									logger.debug(I18N.getMessage("debug.index.directory.skipped", dir));
+									return FileVisitResult.SKIP_SUBTREE;
+								}
+
+								if (memoryDevice.getMount().equals(dir.toString())) return FileVisitResult.CONTINUE;
+
+								return createIndexedFile(dir, attrs, memoryDevice, indexedMetadataSet, indexedFileBuffer);
+							}
+						});
+			} catch (IOException e) {
+				logger.error(e.getLocalizedMessage());
+			}
+
+			if (isCancelled()) {
+				return;
+			}
+
+			indexedFileDAO.createFiles(indexedFileBuffer);
+			indexedFileBuffer.clear();
+		}
+	}
+
+	private FileVisitResult createIndexedFile(Path file, BasicFileAttributes attrs, MemoryDevice memoryDevice,
+											  Set<String> indexedMetadataSet, List<IndexedFile> indexedFileBuffer) {
+
+		IndexedFile indexedFile = new IndexedFile();
+		setFileAttributes(file, attrs, indexedFile, memoryDevice, indexedMetadataSet);
+
+
+		indexedFileBuffer.add(indexedFile);
+		if (indexedFileBuffer.size() > 5000) {
+			indexedFileDAO.createFiles(indexedFileBuffer);
+			indexedFileBuffer.clear();
+		}
+
+		return FileVisitResult.CONTINUE;
+	}
+
+	private void setFileAttributes(Path file, BasicFileAttributes attrs, IndexedFile indexedFile,
+								   MemoryDevice memoryDevice, Set<String> indexedMetadataSet) {
+
+		indexedFile.setFileName(file.getFileName().toString());
+		try {
+			indexedFile.setPath(memoryDeviceManager.trimMountFromPath(memoryDevice, file.toFile()));
+		} catch (PathFromDifferentMemoryDeviceException e) {
+			// ignore, cannot happen
+		}
+
+		indexedFile.setIndex(memoryDevice.getIndex());
+
+		if (indexedMetadataSet.contains(OptionalMetadata.CREATION_TIME.toString())) {
+			indexedFile.setCreationTime(LocalDateTime.ofInstant(attrs.creationTime().toInstant(), ZoneId.systemDefault()));
+		}
+
+		if (indexedMetadataSet.contains(OptionalMetadata.LAST_ACCESS_TIME.toString())) {
+			indexedFile.setLastAccessTime(LocalDateTime.ofInstant(attrs.lastAccessTime().toInstant(), ZoneId.systemDefault()));
+		}
+
+		if (indexedMetadataSet.contains(OptionalMetadata.LAST_MODIFIED_TIME.toString())) {
+			indexedFile.setLastModifiedTime(LocalDateTime.ofInstant(attrs.lastModifiedTime().toInstant(), ZoneId.systemDefault()));
+		}
+
+		if (indexedMetadataSet.contains(OptionalMetadata.SIZE.toString())) {
+			indexedFile.setFileSize(attrs.size()/1024);
+		}
+
+		if (attrs.isDirectory()) {
+			indexedFile.setType(FileType.DIRECTORY);
+		} else if (attrs.isRegularFile()) {
+			indexedFile.setType(FileType.FILE);
+		} else if (attrs.isSymbolicLink()) {
+			indexedFile.setType(FileType.SYMBOLIC_LINK);
+		} else {
+			indexedFile.setType(FileType.OTHER);
+		}
+	}
+
+	private Long getDirectoriesCount(MemoryDevice memoryDevice, Set<String> disabledDirectoriesSet) {
+		final Long[] directoriesCount = {Long.valueOf(0)};
 		// Walk through file tree
 		Path start = new File(memoryDevice.getMount()).toPath();
 		try {
 			Files.walkFileTree(start,
 					new SimpleFileVisitor<Path>() {
 						@Override
-						public FileVisitResult visitFile(Path file,
-														 BasicFileAttributes attrs) throws IOException {
-
-							if (!isFileExtensionIndexed(file, disabledExtensionsSet)) {
-								logger.debug(I18N.getMessage("debug.index.extension.skipped", file));
-								return FileVisitResult.CONTINUE;
-							}
-
-							return createIndexedFile(file, attrs, memoryDevice, indexedMetadataSet, indexedFileBuffer);
+						public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+							return FileVisitResult.CONTINUE;
 						}
 
 						@Override
@@ -290,22 +420,17 @@ public class IndexManagerImpl implements IndexManager {
 						@Override
 						public FileVisitResult preVisitDirectory(Path dir,
 																 BasicFileAttributes attrs) throws IOException {
+							++directoriesCount[0];
 							if (!isDirectoryIndexed(dir, memoryDevice, disabledDirectoriesSet)) {
-								logger.debug(I18N.getMessage("debug.index.directory.skipped", dir));
 								return FileVisitResult.SKIP_SUBTREE;
 							}
-
-							if (memoryDevice.getMount().equals(dir.toString())) return FileVisitResult.CONTINUE;
-
-							return createIndexedFile(dir, attrs, memoryDevice, indexedMetadataSet, indexedFileBuffer);
+							return FileVisitResult.CONTINUE;
 						}
 					});
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
 		}
-
-		indexedFileDAO.createFiles(indexedFileBuffer);
-		indexedFileBuffer.clear();
+		return directoriesCount[0];
 	}
 
 	private void updateDirectory(Path dir, MemoryDevice memoryDevice, Set<String> indexedMetadataSet, Set<String> disabledExtensionsSet,
@@ -375,7 +500,7 @@ public class IndexManagerImpl implements IndexManager {
 				}
 			});
 		} catch (IOException ioException) {
-			// ignore, no rights to read file
+			logger.error(ioException.getLocalizedMessage());
 		}
 
 		for(Map.Entry<String, IndexedFile> entry : indexedFilesInDirectory.entrySet()) {
@@ -415,61 +540,6 @@ public class IndexManagerImpl implements IndexManager {
 		}
 
 		return disabledDirectoriesSet;
-	}
-
-	private FileVisitResult createIndexedFile(Path file, BasicFileAttributes attrs, MemoryDevice memoryDevice,
-											  Set<String> indexedMetadataSet, List<IndexedFile> indexedFileBuffer) {
-
-		IndexedFile indexedFile = new IndexedFile();
-		setFileAttributes(file, attrs, indexedFile, memoryDevice, indexedMetadataSet);
-
-
-		indexedFileBuffer.add(indexedFile);
-		if (indexedFileBuffer.size() > 5000) {
-			indexedFileDAO.createFiles(indexedFileBuffer);
-			indexedFileBuffer.clear();
-		}
-
-		return FileVisitResult.CONTINUE;
-	}
-
-	private void setFileAttributes(Path file, BasicFileAttributes attrs, IndexedFile indexedFile,
-								   MemoryDevice memoryDevice, Set<String> indexedMetadataSet) {
-
-		indexedFile.setFileName(file.getFileName().toString());
-		try {
-			indexedFile.setPath(memoryDeviceManager.trimMountFromPath(memoryDevice, file.toFile()));
-		} catch (PathFromDifferentMemoryDeviceException e) {
-			// ignore, cannot happen
-		}
-
-		indexedFile.setIndex(memoryDevice.getIndex());
-
-		if (indexedMetadataSet.contains(OptionalMetadata.CREATION_TIME.toString())) {
-			indexedFile.setCreationTime(LocalDateTime.ofInstant(attrs.creationTime().toInstant(), ZoneId.systemDefault()));
-		}
-
-		if (indexedMetadataSet.contains(OptionalMetadata.LAST_ACCESS_TIME.toString())) {
-			indexedFile.setLastAccessTime(LocalDateTime.ofInstant(attrs.lastAccessTime().toInstant(), ZoneId.systemDefault()));
-		}
-
-		if (indexedMetadataSet.contains(OptionalMetadata.LAST_MODIFIED_TIME.toString())) {
-			indexedFile.setLastModifiedTime(LocalDateTime.ofInstant(attrs.lastModifiedTime().toInstant(), ZoneId.systemDefault()));
-		}
-
-		if (indexedMetadataSet.contains(OptionalMetadata.SIZE.toString())) {
-			indexedFile.setFileSize(attrs.size()/1024);
-		}
-
-		if (attrs.isDirectory()) {
-			indexedFile.setType(FileType.DIRECTORY);
-		} else if (attrs.isRegularFile()) {
-			indexedFile.setType(FileType.FILE);
-		} else if (attrs.isSymbolicLink()) {
-			indexedFile.setType(FileType.SYMBOLIC_LINK);
-		} else {
-			indexedFile.setType(FileType.OTHER);
-		}
 	}
 
 	private boolean isFileExtensionIndexed(Path file, Set<String> disabledExtensions) {

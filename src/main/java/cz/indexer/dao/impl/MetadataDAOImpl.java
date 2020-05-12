@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,16 +18,16 @@ import java.util.List;
 
 public class MetadataDAOImpl implements MetadataDAO {
 
-	@PersistenceContext(unitName = UtilTools.PERSISTENCE_UNIT)
-	EntityManager entityManager = UtilTools.getEntityManager();
+	private static EntityManager entityManager = UtilTools.getEntityManager();
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	private static MetadataDAOImpl instance = null;
 
 	public static MetadataDAOImpl getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new MetadataDAOImpl();
+		}
 		return instance;
 	}
 

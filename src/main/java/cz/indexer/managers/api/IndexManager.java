@@ -7,9 +7,9 @@ import cz.indexer.model.NonIndexedExtension;
 import cz.indexer.model.exceptions.MemoryDeviceNotConnectedException;
 import cz.indexer.model.exceptions.PathFromDifferentMemoryDeviceException;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.InputMismatchException;
 
 public interface IndexManager {
@@ -20,7 +20,7 @@ public interface IndexManager {
 
 	ObservableList<NonIndexedDirectory> getNonIndexedDirectories();
 
-	boolean createIndex(MemoryDevice memoryDevice, String memoryDeviceName) throws InputMismatchException;
+	Task<Void> getCreateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException;
 
 	boolean updateIndex(MemoryDevice memoryDevice) throws MemoryDeviceNotConnectedException;
 

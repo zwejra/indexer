@@ -144,7 +144,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="400.0">
                <children>
-                  <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#handleCancelActionButton" text="%button.create.cancel">
+                  <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#handleCancelActionButton" text="%button.cancel">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>

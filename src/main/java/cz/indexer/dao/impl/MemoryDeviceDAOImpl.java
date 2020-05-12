@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,16 +16,17 @@ import java.util.List;
 
 public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 
-	@PersistenceContext(unitName = UtilTools.PERSISTENCE_UNIT)
-	EntityManager entityManager = UtilTools.getEntityManager();
+
+	private static EntityManager entityManager = UtilTools.getEntityManager();
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	private static MemoryDeviceDAOImpl instance = null;
 
 	public static MemoryDeviceDAOImpl getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new MemoryDeviceDAOImpl();
+		}
 		return instance;
 	}
 
@@ -67,6 +67,7 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 
 		if (!entityManager.contains(memoryDevice)) {
 			memoryDevice = entityManager.merge(memoryDevice);
+			entityManager.refresh(memoryDevice);
 		}
 
 		entityManager.remove(memoryDevice);

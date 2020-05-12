@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.SingularAttribute;
@@ -28,16 +27,17 @@ import java.util.List;
 
 public class IndexedFileDAOImpl implements IndexedFileDAO {
 
-	@PersistenceContext(unitName = UtilTools.PERSISTENCE_UNIT)
-	EntityManager entityManager = UtilTools.getEntityManager();
-
 	final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	private static IndexedFileDAOImpl instance = null;
 
+	private static EntityManager entityManager = UtilTools.getEntityManager();
+
+
 	public static IndexedFileDAOImpl getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new IndexedFileDAOImpl();
+		}
 		return instance;
 	}
 
@@ -45,6 +45,7 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 
 	@Override
 	public boolean createFiles(List<IndexedFile> files) {
+
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -79,8 +80,9 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 
 	@Override
 	public boolean deleteFiles(List<IndexedFile> files) {
-		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		entityManager.getTransaction().begin();
 
 		for (IndexedFile fileToRemove: files) {
 			entityManager.remove(fileToRemove);
@@ -96,6 +98,16 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	@Override
 	public void deleteFiles(Index index) {
 		logger.debug(I18N.getMessage("debug.transaction.started"));
+
+		// Wait (could happen, that thread which created index isn't done yet)
+		while (entityManager.getTransaction().isActive()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				logger.error(e.getLocalizedMessage());
+			}
+		}
+
 		entityManager.getTransaction().begin();
 
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -106,7 +118,7 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		delete.where(condition);
 		entityManager.createQuery(delete).executeUpdate();
 
-		logger.info(I18N.getMessage("info.transaction.files.of.memory.device.removed", index.getMemoryDevice().toString()));
+		logger.info(I18N.getMessage("info.transaction.files.of.memory.device.removed", index.getMemoryDevice()));
 
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
