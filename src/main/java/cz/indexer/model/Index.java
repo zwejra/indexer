@@ -40,4 +40,13 @@ public class Index {
 	@Getter private Set<NonIndexedExtension> nonIndexedExtensions = new HashSet<>();
 
 	public Index() {}
+
+	@Override
+	public String toString() {
+		return "Index{" +
+				"id=" + id +
+				", lastModifiedTime=" + lastModifiedTime +
+				", memoryDevice=" + memoryDevice +
+				'}';
+	}
 }

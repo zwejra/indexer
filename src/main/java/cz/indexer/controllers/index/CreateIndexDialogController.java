@@ -13,6 +13,7 @@ import cz.indexer.model.exceptions.PathFromDifferentMemoryDeviceException;
 import cz.indexer.tools.I18N;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,10 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,8 +140,16 @@ public class CreateIndexDialogController implements Initializable {
 			Scene scene = new Scene(parent);
 			Stage stage = new Stage();
 			stage.setResizable(false);
-			stage.initStyle(StageStyle.UNDECORATED);
+			stage.initStyle(StageStyle.UTILITY);
 			stage.initModality(Modality.APPLICATION_MODAL);
+
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					task.cancel();
+					stage.close();
+				}
+			});
 
 			progressDialogController.getProgressLabel().textProperty().bind(I18N.createStringBinding("label.progress.bar.create.index"));
 			progressDialogController.getCancelButton().textProperty().bind(I18N.createStringBinding("button.cancel"));
@@ -162,7 +168,7 @@ public class CreateIndexDialogController implements Initializable {
 			Thread thread = new Thread(task);
 			thread.start();
 
-			stage.titleProperty().bind(I18N.createStringBinding("window.create.index.title"));
+			stage.titleProperty().bind(I18N.createStringBinding("window.creating.index.title"));
 			stage.setScene(scene);
 			stage.showAndWait();
 
@@ -170,7 +176,9 @@ public class CreateIndexDialogController implements Initializable {
 				indexManager.deleteIndex(selectedMemoryDevice);
 				memoryDeviceManager.refreshMemoryDevices();
 			}
-
+			
+			indexManager.getNonIndexedDirectories().clear();
+			indexManager.getNonIndexedExtensions().clear();
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
 		}
