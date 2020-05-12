@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 
 public class ProgressDialogController implements Initializable {
 
+	public static final String PROGRESS_DIALOG_FXML = "/cz.indexer.fxml/ProgressDialog.fxml";
+
 	@FXML
 	@Getter private Label progressLabel;
 	@FXML
@@ -26,8 +28,6 @@ public class ProgressDialogController implements Initializable {
 	@Getter private Button cancelButton;
 
 	IndexManager indexManager = IndexManagerImpl.getInstance();
-
-	MemoryDevice selectedMemoryDevice;
 
 	Task task;
 
@@ -41,10 +41,6 @@ public class ProgressDialogController implements Initializable {
 		task.cancel();
 		Stage stage = (Stage) cancelButton.getScene().getWindow();
 		stage.close();
-	}
-
-	public void setSelectedMemoryDevice(MemoryDevice selectedMemoryDevice) {
-		this.selectedMemoryDevice = selectedMemoryDevice;
 	}
 
 	public void setTask(Task task) {

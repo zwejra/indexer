@@ -22,7 +22,7 @@ public interface IndexManager {
 
 	Task<Void> getCreateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException;
 
-	boolean updateIndex(MemoryDevice memoryDevice) throws MemoryDeviceNotConnectedException;
+	Task<Void> getUpdateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException;
 
 	boolean deleteIndex(MemoryDevice memoryDevice);
 

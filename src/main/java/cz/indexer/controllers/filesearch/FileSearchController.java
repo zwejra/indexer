@@ -135,7 +135,7 @@ public class FileSearchController implements Initializable {
 		lastAccessTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastModifiedTime"));
 
 		ContextMenu cm = new ContextMenu();
-		MenuItem menuItem = new MenuItem("Otevrit umisteni souboru");
+		MenuItem menuItem = new MenuItem(I18N.getMessage("menu.item.open.file.path"));
 		cm.getItems().add(menuItem);
 
 		menuItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -155,15 +155,15 @@ public class FileSearchController implements Initializable {
 								Desktop.getDesktop().open(new File(path.getParent()));
 							}
 						} else {
-							Alert alert = new Alert(Alert.AlertType.ERROR, "Zarizeni neni pripojeno.");
+							Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.device.not.connected"));
 							alert.showAndWait();
 						}
 					} else {
-						Alert alert = new Alert(Alert.AlertType.ERROR, "Tento operacni system nepodporuje tuto funkci.");
+						Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.operating.system.function.not.supported"));
 						alert.showAndWait();
 					}
 				} catch (IOException e) {
-					Alert alert = new Alert(Alert.AlertType.ERROR, "Soubor nelze otevrit.");
+					Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.cannot.open.file"));
 					alert.showAndWait();
 				}
 			}
@@ -247,7 +247,7 @@ public class FileSearchController implements Initializable {
 		if (memoryDeviceFilterController.getChooseDevicesRadioButton().isSelected()) {
 			searchAllDevices = false;
 			if (memoryDeviceFilterController.getMemoryDevicesCheckListView().getCheckModel().isEmpty()) {
-				Alert alert = new Alert(Alert.AlertType.ERROR, "Pro spusteni vyhledavani musi byt vybrano alespon jedno pametove zarizeni.");
+				Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.search.no.memory.device.chosen"));
 				alert.showAndWait();
 				return;
 			}

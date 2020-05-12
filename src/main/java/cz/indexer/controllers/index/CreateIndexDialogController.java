@@ -36,8 +36,6 @@ import java.util.ResourceBundle;
 
 public class CreateIndexDialogController implements Initializable {
 
-	private static final String PROGRESS_DIALOG_FXML = "/cz.indexer.fxml/ProgressDialog.fxml";
-
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	@FXML
@@ -129,12 +127,11 @@ public class CreateIndexDialogController implements Initializable {
 
 		Task<Void> task = indexManager.getCreateIndexTask(selectedMemoryDevice);
 
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(PROGRESS_DIALOG_FXML), I18N.getBundle());
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(ProgressDialogController.PROGRESS_DIALOG_FXML), I18N.getBundle());
 		Parent parent;
 		try {
 			parent = loader.load();
 			ProgressDialogController progressDialogController = loader.getController();
-			progressDialogController.setSelectedMemoryDevice(selectedMemoryDevice);
 			progressDialogController.setTask(task);
 
 			Scene scene = new Scene(parent);
@@ -176,7 +173,7 @@ public class CreateIndexDialogController implements Initializable {
 				indexManager.deleteIndex(selectedMemoryDevice);
 				memoryDeviceManager.refreshMemoryDevices();
 			}
-			
+
 			indexManager.getNonIndexedDirectories().clear();
 			indexManager.getNonIndexedExtensions().clear();
 		} catch (IOException e) {

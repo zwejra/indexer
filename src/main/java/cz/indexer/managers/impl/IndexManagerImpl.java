@@ -1,7 +1,5 @@
 package cz.indexer.managers.impl;
 
-import cz.indexer.controllers.index.CreateIndexDialogController;
-import cz.indexer.controllers.index.ProgressDialogController;
 import cz.indexer.dao.api.IndexedFileDAO;
 import cz.indexer.dao.api.MetadataDAO;
 import cz.indexer.dao.impl.IndexedFileDAOImpl;
@@ -19,22 +17,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.persistence.internal.sessions.factories.ObjectPersistenceRuntimeXMLProject_11_1_1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -94,75 +86,9 @@ public class IndexManagerImpl implements IndexManager {
 	}
 
 	@Override
-	public boolean updateIndex(MemoryDevice memoryDevice) throws MemoryDeviceNotConnectedException {
-		memoryDeviceManager.refreshMemoryDevices();
-		if (!memoryDevice.isConnected()) {
-			throw new MemoryDeviceNotConnectedException(I18N.getMessage("exception.device.not.connected", memoryDevice));
-		}
-
-		Index indexToUpdate = memoryDevice.getIndex();
-
-		Set<String> indexedMetadataSet = getIndexedMetadataSet(memoryDevice.getIndex());
-		Set<String> disabledExtensionsSet = getDisabledExtensionsSet(memoryDevice.getIndex());
-		Set<String> disabledDirectoriesSet = getDisabledDirectoriesSet(memoryDevice.getIndex());
-
-		// Walk through file tree
-		Path start = new File(memoryDevice.getMount()).toPath();
-		try {
-			Files.walkFileTree(start,
-					new SimpleFileVisitor<Path>() {
-						@Override
-						public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-							return FileVisitResult.CONTINUE;
-						}
-
-						@Override
-						public FileVisitResult visitFileFailed(Path file, IOException e) {
-							return FileVisitResult.SKIP_SUBTREE;
-						}
-
-						@Override
-						public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-							if (!isDirectoryIndexed(dir, memoryDevice, disabledDirectoriesSet)) {
-								logger.debug(I18N.getMessage("debug.index.directory.skipped", dir));
-								return FileVisitResult.SKIP_SUBTREE;
-							}
-
-							return FileVisitResult.CONTINUE;
-						}
-						
-						@Override
-						public FileVisitResult postVisitDirectory(Path dir,
-																  IOException e) {
-							try {
-								BasicFileAttributes attrs = Files.readAttributes(dir, BasicFileAttributes.class);
-
-								OffsetDateTime odt = OffsetDateTime.now(ZoneId.systemDefault());
-								ZoneOffset zoneOffset = odt.getOffset();
-								
-								if (attrs.lastModifiedTime().toInstant().isBefore(indexToUpdate.getLastModifiedTime().toInstant(zoneOffset))) {
-									return FileVisitResult.CONTINUE;
-								}
-
-								updateDirectory(dir, memoryDevice, indexedMetadataSet, disabledExtensionsSet, disabledDirectoriesSet, zoneOffset);
-
-							} catch (PathFromDifferentMemoryDeviceException pathFromDifferentMemoryDeviceException) {
-								// ignore, cannot happen
-							} catch (IOException ioException) {
-								logger.error(I18N.getMessage("error.cannot.read.attributes", dir));
-							}
-
-							return FileVisitResult.CONTINUE;
-						}
-					});
-		} catch (IOException e) {
-			logger.error(e.getLocalizedMessage());
-		}
-
-		memoryDevice.getIndex().setLastModifiedTime(LocalDateTime.now());
-		memoryDeviceManager.updateMemoryDevice(memoryDevice);
-
-		return true;
+	public Task<Void> getUpdateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException {
+		UpdateIndexTask task = new UpdateIndexTask(memoryDevice);
+		return task;
 	}
 
 	@Override
@@ -341,6 +267,105 @@ public class IndexManagerImpl implements IndexManager {
 
 			indexedFileDAO.createFiles(indexedFileBuffer);
 			indexedFileBuffer.clear();
+		}
+	}
+
+	public class UpdateIndexTask extends Task<Void> {
+		private Long totalIterations;
+		private final MemoryDevice memoryDevice;
+
+		public UpdateIndexTask(MemoryDevice memoryDevice) {
+			this.memoryDevice = memoryDevice;
+			totalIterations = Long.valueOf(-1);
+		}
+
+		@Override protected Void call() throws Exception {
+			logger.info(I18N.getMessage("info.updating.started", memoryDevice));
+			updateIndex(memoryDevice);
+			logger.info(I18N.getMessage("info.updating.finished", memoryDevice));
+
+			return null;
+		}
+
+		private boolean updateIndex(MemoryDevice memoryDevice) throws MemoryDeviceNotConnectedException {
+			Index indexToUpdate = memoryDevice.getIndex();
+
+			Set<String> indexedMetadataSet = getIndexedMetadataSet(memoryDevice.getIndex());
+			Set<String> disabledExtensionsSet = getDisabledExtensionsSet(memoryDevice.getIndex());
+			Set<String> disabledDirectoriesSet = getDisabledDirectoriesSet(memoryDevice.getIndex());
+
+			totalIterations = getDirectoriesCount(memoryDevice, disabledDirectoriesSet);
+			final Long[] iterations = {Long.valueOf(0)};
+
+			// Walk through file tree
+			Path start = new File(memoryDevice.getMount()).toPath();
+			try {
+				Files.walkFileTree(start,
+						new SimpleFileVisitor<Path>() {
+							@Override
+							public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+								return FileVisitResult.CONTINUE;
+							}
+
+							@Override
+							public FileVisitResult visitFileFailed(Path file, IOException e) {
+								return FileVisitResult.SKIP_SUBTREE;
+							}
+
+							@Override
+							public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+								if (isCancelled()) {
+									return FileVisitResult.TERMINATE;
+								}
+
+								updateProgress(++iterations[0], totalIterations);
+								if (!isDirectoryIndexed(dir, memoryDevice, disabledDirectoriesSet)) {
+									logger.debug(I18N.getMessage("debug.index.directory.skipped", dir));
+									return FileVisitResult.SKIP_SUBTREE;
+								}
+
+								return FileVisitResult.CONTINUE;
+							}
+
+							@Override
+							public FileVisitResult postVisitDirectory(Path dir,
+																	  IOException e) {
+								if (isCancelled()) {
+									return FileVisitResult.TERMINATE;
+								}
+
+								try {
+									BasicFileAttributes attrs = Files.readAttributes(dir, BasicFileAttributes.class);
+
+									OffsetDateTime odt = OffsetDateTime.now(ZoneId.systemDefault());
+									ZoneOffset zoneOffset = odt.getOffset();
+
+									if (attrs.lastModifiedTime().toInstant().isBefore(indexToUpdate.getLastModifiedTime().toInstant(zoneOffset))) {
+										return FileVisitResult.CONTINUE;
+									}
+
+									updateDirectory(dir, memoryDevice, indexedMetadataSet, disabledExtensionsSet, disabledDirectoriesSet, zoneOffset);
+
+								} catch (PathFromDifferentMemoryDeviceException pathFromDifferentMemoryDeviceException) {
+									// ignore, cannot happen
+								} catch (IOException ioException) {
+									logger.error(I18N.getMessage("error.cannot.read.attributes", dir));
+								}
+
+								return FileVisitResult.CONTINUE;
+							}
+						});
+			} catch (IOException e) {
+				logger.error(e.getLocalizedMessage());
+			}
+
+			if (!isCancelled()) {
+				memoryDevice.getIndex().setLastModifiedTime(LocalDateTime.now());
+				memoryDeviceManager.updateMemoryDevice(memoryDevice);
+				return true;
+			}
+
+			return false;
 		}
 	}
 
