@@ -123,6 +123,10 @@ public class FileSearchController implements Initializable {
 		lastModifiedTimeTableColumn.textProperty().bind(I18N.createStringBinding("column.search.lastModifiedTime"));
 		lastAccessTimeTableColumn.textProperty().bind(I18N.createStringBinding("column.search.lastAccessTime"));
 
+		Label placeholderLabel = new Label();
+		placeholderLabel.textProperty().bind(I18N.createStringBinding("table.view.placeholder"));
+		resultsTableView.setPlaceholder(placeholderLabel);
+
 		rootBorderPane.setCenter(memoryDeviceFilter);
 
 		resultsTableView.setItems(fileSearchManager.getSearchResults());
@@ -131,8 +135,8 @@ public class FileSearchController implements Initializable {
 
 		sizeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, Long>("fileSize"));
 		creationTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("creationTime"));
-		lastModifiedTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastAccessTime"));
-		lastAccessTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastModifiedTime"));
+		lastModifiedTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastModifiedTime"));
+		lastAccessTimeTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, LocalDateTime>("lastAccessTime"));
 
 		ContextMenu cm = new ContextMenu();
 		MenuItem menuItem = new MenuItem(I18N.getMessage("menu.item.open.file.path"));
