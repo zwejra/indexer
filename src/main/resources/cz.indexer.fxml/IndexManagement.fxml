@@ -15,9 +15,9 @@
    <children>
       <HBox fx:id="hbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox maxWidth="300.0" minWidth="150.0" prefHeight="600.0" prefWidth="200.0" styleClass="indexed-media-vbox" HBox.hgrow="ALWAYS">
+            <VBox maxWidth="400.0" minWidth="200.0" prefHeight="600.0" prefWidth="300.0" styleClass="indexed-media-vbox" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox prefHeight="40.0" prefWidth="200.0">
+                  <HBox prefHeight="40.0" prefWidth="300.0" VBox.vgrow="NEVER">
                      <children>
                         <Label fx:id="connectedDevicesLabel" text="%label.connectedDevices">
                            <font>
@@ -42,7 +42,7 @@
                      </children>
                   </HBox>
                   <JFXListView fx:id="connectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="memory-devices-list-view" VBox.vgrow="ALWAYS" />
-                  <HBox prefHeight="40.0" prefWidth="200.0">
+                  <HBox prefHeight="40.0" prefWidth="300.0" VBox.vgrow="NEVER">
                      <children>
                         <Label fx:id="disconnectedDevicesLabel" alignment="BOTTOM_LEFT" prefWidth="200.0" text="%label.disconnectedDevices">
                            <font>
@@ -57,7 +57,7 @@
                   <JFXListView fx:id="disconnectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="memory-devices-list-view" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <AnchorPane fx:id="memoryDeviceInfoPane" prefHeight="540.0" prefWidth="600.0" HBox.hgrow="ALWAYS" />
+            <AnchorPane fx:id="memoryDeviceInfoPane" prefHeight="540.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

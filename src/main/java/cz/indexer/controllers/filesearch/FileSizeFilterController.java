@@ -6,12 +6,16 @@ import cz.indexer.model.enums.SizeCondition;
 import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import lombok.Getter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class FileSizeFilterController implements Initializable {
+
+	@FXML
+	private Label sizeFilterLabel;
 
 	@FXML
 	@Getter private JFXComboBox<String> fileSizeComboBox;
@@ -21,6 +25,7 @@ public class FileSizeFilterController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		sizeFilterLabel.textProperty().bind(I18N.createStringBinding("label.size.filter"));
 		refreshSizeFilterComboBox();
 	}
 

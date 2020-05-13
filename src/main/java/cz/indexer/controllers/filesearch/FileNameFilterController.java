@@ -6,12 +6,16 @@ import cz.indexer.model.enums.NameCondition;
 import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import lombok.Getter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class FileNameFilterController implements Initializable {
+
+	@FXML
+	private Label nameFilterLabel;
 
 	@FXML
 	@Getter private JFXComboBox fileNameComboBox;
@@ -21,6 +25,7 @@ public class FileNameFilterController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		nameFilterLabel.textProperty().bind(I18N.createStringBinding("label.name.filter"));
 		refreshNameComboBoxes();
 	}
 
