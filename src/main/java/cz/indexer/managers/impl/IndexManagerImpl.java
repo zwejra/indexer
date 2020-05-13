@@ -241,7 +241,6 @@ public class IndexManagerImpl implements IndexManager {
 							@Override
 							public FileVisitResult preVisitDirectory(Path dir,
 																	 BasicFileAttributes attrs) throws IOException {
-
 								if (isCancelled()) {
 									return FileVisitResult.TERMINATE;
 								}
@@ -375,11 +374,12 @@ public class IndexManagerImpl implements IndexManager {
 		IndexedFile indexedFile = new IndexedFile();
 		setFileAttributes(file, attrs, indexedFile, memoryDevice, indexedMetadataSet);
 
-
-		indexedFileBuffer.add(indexedFile);
-		if (indexedFileBuffer.size() > 5000) {
-			indexedFileDAO.createFiles(indexedFileBuffer);
-			indexedFileBuffer.clear();
+		if (indexedFile.getPath() != null) {
+			indexedFileBuffer.add(indexedFile);
+			if (indexedFileBuffer.size() > 2500) {
+				indexedFileDAO.createFiles(indexedFileBuffer);
+				indexedFileBuffer.clear();
+			}
 		}
 
 		return FileVisitResult.CONTINUE;

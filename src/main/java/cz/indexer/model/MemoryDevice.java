@@ -3,6 +3,8 @@ package cz.indexer.model;
 import cz.indexer.tools.I18N;
 import lombok.Getter;
 import lombok.Setter;
+import oshi.PlatformEnum;
+import oshi.SystemInfo;
 
 import javax.persistence.*;
 
@@ -41,7 +43,7 @@ public class MemoryDevice {
 	 * Path to the mount directory of a memory device.
 	 */
 	@Transient
-	@Getter @Setter private String mount;
+	@Getter private String mount;
 
 	/**
 	 * State of index.
@@ -61,7 +63,7 @@ public class MemoryDevice {
 	public MemoryDevice(String uuid, String label, String mount, boolean indexed, boolean connected) {
 		this.uuid = uuid;
 		this.label = label;
-		this.mount = mount;
+		this.setMount(mount);
 		this.indexed = indexed;
 		this.connected = connected;
 	}
@@ -80,6 +82,15 @@ public class MemoryDevice {
 			} else {
 				return I18N.getMessage("error.memory.device.to.string", this.uuid);
 			}
+		}
+	}
+
+	public void setMount(String mount) {
+		if (SystemInfo.getCurrentPlatformEnum() == PlatformEnum.WINDOWS) {
+			this.mount = mount;
+		} else {
+			if (mount.equals("/")) this.mount = mount;
+			else this.mount = mount + "/";
 		}
 	}
 }

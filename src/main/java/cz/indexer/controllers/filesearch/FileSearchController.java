@@ -149,25 +149,31 @@ public class FileSearchController implements Initializable {
 				MemoryDevice fileOwner = selectedFile.getIndex().getMemoryDevice();
 				fileOwner = memoryDeviceManager.refreshConnectedMemoryDevice(fileOwner);
 
-				try {
-					if (Desktop.isDesktopSupported()) {
-						if (fileOwner.isConnected()) {
-							if (selectedFile.getType().equals(FileType.DIRECTORY)) {
-								Desktop.getDesktop().open(new File(selectedFile.getAbsolutePath()));
-							} else {
-								File path = new File(selectedFile.getAbsolutePath());
-								Desktop.getDesktop().open(new File(path.getParent()));
-							}
+				if (Desktop.isDesktopSupported()) {
+					if (fileOwner.isConnected()) {
+						String pathToDirectory;
+						if (selectedFile.getType().equals(FileType.DIRECTORY)) {
+							pathToDirectory = selectedFile.getAbsolutePath();
 						} else {
-							Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.device.not.connected"));
-							alert.showAndWait();
+							File pathToFile = new File(selectedFile.getAbsolutePath());
+							pathToDirectory = pathToFile.getParent();
 						}
+
+						new Thread(() -> {
+							try {
+								Desktop.getDesktop().open(new File(pathToDirectory));
+							} catch (IOException e) {
+								Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.cannot.open.file"));
+								alert.showAndWait();
+							}
+						}).start();
+
 					} else {
-						Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.operating.system.function.not.supported"));
+						Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.device.not.connected"));
 						alert.showAndWait();
 					}
-				} catch (IOException e) {
-					Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.cannot.open.file"));
+				} else {
+					Alert alert = new Alert(Alert.AlertType.ERROR, I18N.getMessage("exception.operating.system.function.not.supported"));
 					alert.showAndWait();
 				}
 			}
@@ -317,6 +323,7 @@ public class FileSearchController implements Initializable {
 
 	private SearchSizeValue getSearchSizeValue(int index, String sizeValue) throws NumberFormatException {
 		if (index == -1) return null;
+		if (StringUtils.isBlank(sizeValue)) return null;
 
 		SizeCondition sizeCondition = SizeCondition.values()[index];
 

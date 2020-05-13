@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oshi.PlatformEnum;
 import oshi.SystemInfo;
 import oshi.software.os.OSFileStore;
 
@@ -125,7 +126,8 @@ public class MemoryDeviceManagerImpl implements MemoryDeviceManager {
 		if (!file.getAbsolutePath().contains(memoryDevice.getMount())) {
 			throw new PathFromDifferentMemoryDeviceException(I18N.getMessage("exception.path.not.on.memory.device", file.getAbsolutePath(), memoryDevice));
 		}
-		return StringUtils.stripStart(file.getAbsolutePath(), memoryDevice.getMount());
+
+		return StringUtils.substringAfter(file.getAbsolutePath(), memoryDevice.getMount());
 	}
 
 	@Override

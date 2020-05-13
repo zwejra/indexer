@@ -56,7 +56,6 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
-
 		entityManager.getEntityManagerFactory().getCache().evictAll();
 
 		return true;

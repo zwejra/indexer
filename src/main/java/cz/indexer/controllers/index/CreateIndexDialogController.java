@@ -172,10 +172,11 @@ public class CreateIndexDialogController implements Initializable {
 			if (task.isCancelled()) {
 				indexManager.deleteIndex(selectedMemoryDevice);
 				memoryDeviceManager.refreshMemoryDevices();
+			} else {
+				indexManager.getNonIndexedDirectories().clear();
+				indexManager.getNonIndexedExtensions().clear();
 			}
 
-			indexManager.getNonIndexedDirectories().clear();
-			indexManager.getNonIndexedExtensions().clear();
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
 		}
