@@ -6,10 +6,32 @@
 
 .memory-devices-list-view {
     -fx-background-insets: 0 1;
+    -fx-border-width: 1 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
 }
 
 .footer {
     -fx-border-width: 1 0 0 0;
     -fx-border-color: #bababa;
     -fx-border-style: solid;
+}
+
+.file-search-gridpane {
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
+}
+
+.filtres-vbox {
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
+}
+
+.filter-button {
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
+    -jfx-button-type: RAISED;
 }

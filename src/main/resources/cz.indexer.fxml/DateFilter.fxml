@@ -3,6 +3,9 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXTimePicker?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -10,11 +13,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<AnchorPane prefHeight="320.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.DateFilterController">
+<AnchorPane prefHeight="260.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.DateFilterController">
    <children>
-      <VBox alignment="CENTER" layoutX="146.0" layoutY="72.0" prefHeight="320.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="146.0" layoutY="72.0" prefHeight="260.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <GridPane fx:id="lastModifiedDate" alignment="CENTER">
               <columnConstraints>
@@ -32,12 +33,12 @@
                   <Label fx:id="creationDateLabel" text="%label.date.creationDate" />
                   <Label fx:id="lastModifiedDateLabel" text="%label.date.lastModifiedDate" GridPane.columnIndex="1" />
                   <Label fx:id="lastAccessDateLabel" text="%label.date.lastAccessDate" GridPane.columnIndex="2" />
-                  <JFXDatePicker fx:id="creationDateDatePicker" prefWidth="180.0" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="creationDateTimePicker" prefWidth="180.0" GridPane.rowIndex="3" />
-                  <JFXDatePicker fx:id="lastModifiedDateDatePicker"  prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="lastModifiedDateTimePicker" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <JFXDatePicker fx:id="lastAccessDateDatePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="lastAccessDateTimePicker" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="creationDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="creationDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="lastModifiedDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="lastModifiedDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <JFXDatePicker fx:id="lastAccessDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <JFXTimePicker fx:id="lastAccessDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <JFXComboBox fx:id="creationDateComboBox" prefWidth="180.0" GridPane.rowIndex="1">
                       <items>
                           <FXCollections fx:factory="observableArrayList">
@@ -63,6 +64,9 @@
                        </items>
                    </JFXComboBox>
             </children>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </VBox.margin>
             </GridPane>
          </children>
       </VBox>

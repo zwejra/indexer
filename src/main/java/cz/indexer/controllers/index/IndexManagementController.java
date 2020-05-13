@@ -16,7 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +28,7 @@ public class IndexManagementController implements Initializable {
 	private static final String INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/IndexedMemoryDevice.fxml";
 
 	@FXML
-	private Pane memoryDeviceInfoPane;
+	private AnchorPane memoryDeviceInfoPane;
 
 	@FXML
 	private Label connectedDevicesLabel;

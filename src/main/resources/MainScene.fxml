@@ -15,7 +15,7 @@
    <children>
       <VBox prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TabPane prefHeight="570.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane prefHeight="570.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                <tabs>
                 <Tab fx:id="indexManagementTab" closable="false" text="%tab.indexManagement">
                   <content>
@@ -29,7 +29,7 @@
                 </Tab>
                </tabs>
             </TabPane>
-            <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="800.0" styleClass="footer">
+            <HBox alignment="CENTER_RIGHT" maxHeight="30.0" prefHeight="30.0" prefWidth="800.0" styleClass="footer">
                <children>
                   <Button fx:id="czechButton" mnemonicParsing="false" onAction="#handleChangeLanguageToCzech">
                      <graphic>

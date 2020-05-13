@@ -8,15 +8,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexManagementController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexManagementController">
    <children>
       <HBox fx:id="hbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox maxWidth="300.0" minWidth="150.0" prefHeight="600.0" prefWidth="200.0" styleClass="indexed-media-vbox">
+            <VBox maxWidth="300.0" minWidth="150.0" prefHeight="600.0" prefWidth="200.0" styleClass="indexed-media-vbox" HBox.hgrow="ALWAYS">
                <children>
                   <HBox prefHeight="40.0" prefWidth="200.0">
                      <children>
@@ -42,7 +41,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <JFXListView fx:id="connectedMemoryDevicesListView" prefHeight="260.0" prefWidth="200.0" styleClass="memory-devices-list-view" />
+                  <JFXListView fx:id="connectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="memory-devices-list-view" VBox.vgrow="ALWAYS" />
                   <HBox prefHeight="40.0" prefWidth="200.0">
                      <children>
                         <Label fx:id="disconnectedDevicesLabel" alignment="BOTTOM_LEFT" prefWidth="200.0" text="%label.disconnectedDevices">
@@ -55,10 +54,10 @@
                         </Label>
                      </children>
                   </HBox>
-                  <JFXListView fx:id="disconnectedMemoryDevicesListView" prefHeight="260.0" prefWidth="200.0" styleClass="memory-devices-list-view" />
+                  <JFXListView fx:id="disconnectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="memory-devices-list-view" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <Pane fx:id="memoryDeviceInfoPane" prefWidth="600.0" />
+            <AnchorPane fx:id="memoryDeviceInfoPane" prefHeight="540.0" prefWidth="600.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

@@ -7,21 +7,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckListView?>
 
-<AnchorPane prefHeight="320.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.MemoryDeviceFilterController">
+<AnchorPane prefHeight="260.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.MemoryDeviceFilterController">
    <children>
-      <VBox alignment="CENTER" layoutX="156.0" layoutY="82.0" prefHeight="320.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="156.0" layoutY="82.0" prefHeight="260.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                <children>
-                  <JFXRadioButton fx:id="chooseDevicesRadioButton" onAction="#handleChooseDevicesRadioButton" text="%button.search.chooseDevices">
+                  <JFXRadioButton fx:id="chooseDevicesRadioButton" onAction="#handleChooseDevicesRadioButton" text="%button.search.chooseDevices" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets right="20.0" />
                      </padding>
                   </JFXRadioButton>
-                  <JFXRadioButton fx:id="allDevicesRadioButton" onAction="#handleAllDevicesRadioButton" text="%button.search.allDevices" />
+                  <JFXRadioButton fx:id="allDevicesRadioButton" onAction="#handleAllDevicesRadioButton" text="%button.search.allDevices" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <CheckListView fx:id="memoryDevicesCheckListView" prefHeight="270.0">
+            <CheckListView fx:id="memoryDevicesCheckListView" prefHeight="200.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
                </VBox.margin>

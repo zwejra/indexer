@@ -13,11 +13,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.FileSearchController">
+<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.FileSearchController">
     <bottom>
-      <VBox prefHeight="280.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="280.0" prefWidth="600.0" styleClass="file-search-gridpane" BorderPane.alignment="CENTER">
          <children>
-            <GridPane prefHeight="50.0">
+            <GridPane prefHeight="50.0" VBox.vgrow="NEVER">
               <columnConstraints>
                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -34,13 +34,13 @@
                         <Insets bottom="5.0" left="10.0" top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="searchButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSearchActionButton" prefHeight="35.0" prefWidth="150.0" text="%button.search" GridPane.columnIndex="1">
+                  <Button fx:id="searchButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSearchActionButton" prefHeight="35.0" prefWidth="150.0" text="%button.search" GridPane.columnIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin></Button>
                </children>
             </GridPane>
-            <TableView fx:id="resultsTableView" prefHeight="230.0" prefWidth="800.0">
+            <TableView fx:id="resultsTableView" prefHeight="230.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
               <columns>
                   <TableColumn fx:id="nameTableColumn" prefWidth="163.0" text="%column.search.name" />
                 <TableColumn fx:id="pathTableColumn" prefWidth="145.0" text="%column.search.path" />
@@ -54,20 +54,20 @@
       </VBox>
    </bottom>
    <left>
-      <VBox alignment="TOP_CENTER" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="200.0" styleClass="filtres-vbox" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="filtersLabel" prefHeight="30.0" text="%label.search.filters">
+            <Label fx:id="filtersLabel" prefHeight="60.0" text="%label.search.filters">
                <font>
                   <Font size="18.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
+                  <Insets />
                </VBox.margin>
             </Label>
-            <JFXButton fx:id="memoryDeviceFilterButton" onAction="#handleMemoryDeviceFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.memoryDevicesFilter" />
-            <JFXButton fx:id="fileNameFilterButton" onAction="#handleFileNameFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.filenameFilter" />
-            <JFXButton fx:id="dateFilterButton" onAction="#handleDateFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.dateFilter" />
-            <JFXButton fx:id="fileSizeFilterButton" onAction="#handleFileSizeFilterButton" prefHeight="50.0" prefWidth="200.0" text="%button.search.filesizeFilter" />
+            <JFXButton fx:id="memoryDeviceFilterButton" onAction="#handleMemoryDeviceFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.memoryDevicesFilter" />
+            <JFXButton fx:id="fileNameFilterButton" onAction="#handleFileNameFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.filenameFilter" />
+            <JFXButton fx:id="dateFilterButton" onAction="#handleDateFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.dateFilter" />
+            <JFXButton fx:id="fileSizeFilterButton" onAction="#handleFileSizeFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.filesizeFilter" />
          </children>
       </VBox>
    </left>

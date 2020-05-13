@@ -7,26 +7,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainAnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexedMemoryDeviceController">
+<AnchorPane fx:id="mainAnchorPane" prefHeight="540.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexedMemoryDeviceController">
    <children>
-      <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" prefHeight="540.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="lastIndexUpdateLabel" alignment="CENTER" text="%label.lastIndexUpdate">
+            <Label fx:id="lastIndexUpdateLabel" alignment="CENTER" text="%label.lastIndexUpdate" VBox.vgrow="ALWAYS">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="lastIndexUpdateValue" alignment="CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER">
+            <Label fx:id="lastIndexUpdateValue" alignment="CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="updateButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUpdateIndexActionButton" prefHeight="50.0" prefWidth="200.0" text="%button.updateIndex">
+            <Button fx:id="updateButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUpdateIndexActionButton" prefHeight="50.0" prefWidth="200.0" text="%button.updateIndex" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteIndexActionButton" text="%button.deleteIndex">
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteIndexActionButton" text="%button.deleteIndex" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
