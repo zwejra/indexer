@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexManagementController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexManagementController">
    <children>
-      <HBox fx:id="hbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox fx:id="hbox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox maxWidth="400.0" minWidth="200.0" prefHeight="600.0" prefWidth="300.0" styleClass="indexed-media-vbox" HBox.hgrow="ALWAYS">
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="400.0" minWidth="200.0" prefHeight="600.0" prefWidth="300.0" styleClass="indexed-media-vbox" HBox.hgrow="ALWAYS">
                <children>
                   <HBox prefHeight="40.0" prefWidth="300.0" VBox.vgrow="NEVER">
                      <children>
@@ -57,7 +57,7 @@
                   <JFXListView fx:id="disconnectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="memory-devices-list-view" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <AnchorPane fx:id="memoryDeviceInfoPane" prefHeight="540.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
+            <AnchorPane fx:id="memoryDeviceInfoPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="540.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

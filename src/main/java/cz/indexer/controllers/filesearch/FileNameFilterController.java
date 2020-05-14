@@ -2,7 +2,6 @@ package cz.indexer.controllers.filesearch;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import cz.indexer.model.enums.NameCondition;
 import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,16 +25,22 @@ public class FileNameFilterController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		nameFilterLabel.textProperty().bind(I18N.createStringBinding("label.name.filter"));
-		refreshNameComboBoxes();
-	}
 
-	public void refreshNameComboBoxes() {
-		fileNameComboBox.getItems().clear();
-		fileNameComboBox.getItems().addAll(
-				I18N.getMessage(NameCondition.CONTAINS),
-				I18N.getMessage(NameCondition.NOT_CONTAINS),
-				I18N.getMessage(NameCondition.STARTS_WITH),
-				I18N.getMessage(NameCondition.ENDS_WITH)
+		Label containsLabel = new Label();
+		Label notContainsLabel = new Label();
+		Label startsWith = new Label();
+		Label endsWith = new Label();
+
+		containsLabel.textProperty().bind(I18N.createStringBinding("contains"));
+		notContainsLabel.textProperty().bind(I18N.createStringBinding("not.contains"));
+		startsWith.textProperty().bind(I18N.createStringBinding("starts.with"));
+		endsWith.textProperty().bind(I18N.createStringBinding("ends.with"));
+
+		fileNameComboBox.getItems().setAll(
+				containsLabel,
+				notContainsLabel,
+				startsWith,
+				endsWith
 		);
 	}
 }

@@ -25,10 +25,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -83,7 +83,7 @@ public class FileSearchController implements Initializable {
 	private JFXButton fileSizeFilterButton;
 
 	@FXML
-	private BorderPane rootBorderPane;
+	private BorderPane filterBorderPane;
 
 	@FXML
 	private Parent memoryDeviceFilter;
@@ -127,7 +127,7 @@ public class FileSearchController implements Initializable {
 		placeholderLabel.textProperty().bind(I18N.createStringBinding("table.view.placeholder"));
 		resultsTableView.setPlaceholder(placeholderLabel);
 
-		rootBorderPane.setCenter(memoryDeviceFilter);
+		filterBorderPane.setCenter(memoryDeviceFilter);
 
 		resultsTableView.setItems(fileSearchManager.getSearchResults());
 		nameTableColumn.setCellValueFactory(new PropertyValueFactory<IndexedFile, String>("fileName"));
@@ -293,22 +293,22 @@ public class FileSearchController implements Initializable {
 
 	@FXML
 	public void handleMemoryDeviceFilterButton(ActionEvent actionEvent) {
-		rootBorderPane.setCenter(memoryDeviceFilter);
+		filterBorderPane.setCenter(memoryDeviceFilter);
 	}
 
 	@FXML
 	public void handleFileNameFilterButton(ActionEvent actionEvent) {
-		rootBorderPane.setCenter(fileNameFilter);
+		filterBorderPane.setCenter(fileNameFilter);
 	}
 
 	@FXML
 	public void handleDateFilterButton(ActionEvent actionEvent) {
-		rootBorderPane.setCenter(dateFilter);
+		filterBorderPane.setCenter(dateFilter);
 	}
 
 	@FXML
 	public void handleFileSizeFilterButton(ActionEvent actionEvent) {
-		rootBorderPane.setCenter(fileSizeFilter);
+		filterBorderPane.setCenter(fileSizeFilter);
 	}
 
 	private SearchDateValue getSearchDateValue(int index, LocalDate localDate, LocalTime localTime) throws InputMismatchException {

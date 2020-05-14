@@ -3,7 +3,6 @@ package cz.indexer.controllers.filesearch;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
-import cz.indexer.model.enums.DateCondition;
 import cz.indexer.tools.I18N;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,26 +49,26 @@ public class DateFilterController implements Initializable {
 		lastModifiedDateLabel.textProperty().bind(I18N.createStringBinding("label.date.lastModifiedDate"));
 		lastAccessDateLabel.textProperty().bind(I18N.createStringBinding("label.date.lastAccessDate"));
 
-		refreshDateComboBoxes();
+		Label before = new Label();
+		Label after = new Label();
+
+		before.textProperty().bind(I18N.createStringBinding("before"));
+		after.textProperty().bind(I18N.createStringBinding("after"));
+
+		creationDateComboBox.getItems().setAll(
+				before,
+				after
+		);
+
+		lastModifiedDateComboBox.getItems().setAll(
+				before,
+				after
+		);
+
+		lastAccessDateComboBox.getItems().setAll(
+				before,
+				after
+		);
 	}
 
-	public void refreshDateComboBoxes() {
-		creationDateComboBox.getItems().clear();
-		creationDateComboBox.getItems().addAll(
-				I18N.getMessage(DateCondition.BEFORE),
-				I18N.getMessage(DateCondition.AFTER)
-		);
-
-		lastAccessDateComboBox.getItems().clear();
-		lastAccessDateComboBox.getItems().addAll(
-				I18N.getMessage(DateCondition.BEFORE),
-				I18N.getMessage(DateCondition.AFTER)
-		);
-
-		lastModifiedDateComboBox.getItems().clear();
-		lastModifiedDateComboBox.getItems().addAll(
-				I18N.getMessage(DateCondition.BEFORE),
-				I18N.getMessage(DateCondition.AFTER)
-		);
-	}
 }

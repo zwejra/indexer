@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -13,64 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.FileSearchController">
-    <bottom>
-      <VBox prefHeight="280.0" prefWidth="600.0" styleClass="file-search-gridpane" BorderPane.alignment="CENTER">
-         <children>
-            <GridPane prefHeight="50.0" VBox.vgrow="NEVER">
-              <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label fx:id="searchResultsLabel" text="%label.search.results">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets bottom="5.0" left="10.0" top="5.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Button fx:id="searchButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSearchActionButton" prefHeight="35.0" prefWidth="150.0" text="%button.search" GridPane.columnIndex="1" GridPane.valignment="CENTER">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin></Button>
-               </children>
-            </GridPane>
-            <TableView fx:id="resultsTableView" prefHeight="230.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
-              <columns>
-                  <TableColumn fx:id="nameTableColumn" prefWidth="163.0" text="%column.search.name" />
-                <TableColumn fx:id="pathTableColumn" prefWidth="145.0" text="%column.search.path" />
-                <TableColumn fx:id="sizeTableColumn" prefWidth="78.0" text="%column.search.size" />
-                  <TableColumn fx:id="creationTimeTableColumn" minWidth="0.0" prefWidth="123.0" text="%column.search.creationTime" />
-                  <TableColumn fx:id="lastModifiedTimeTableColumn" prefWidth="134.0" text="%column.search.lastModifiedTime" />
-                  <TableColumn fx:id="lastAccessTimeTableColumn" minWidth="0.0" prefWidth="156.0" text="%column.search.lastAccessTime" />
-              </columns>
-            </TableView>
-         </children>
-      </VBox>
-   </bottom>
-   <left>
-      <VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="200.0" styleClass="filtres-vbox" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="filtersLabel" prefHeight="60.0" text="%label.search.filters">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Label>
-            <JFXButton fx:id="memoryDeviceFilterButton" onAction="#handleMemoryDeviceFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.memoryDevicesFilter" />
-            <JFXButton fx:id="fileNameFilterButton" onAction="#handleFileNameFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.filenameFilter" />
-            <JFXButton fx:id="dateFilterButton" onAction="#handleDateFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.dateFilter" />
-            <JFXButton fx:id="fileSizeFilterButton" onAction="#handleFileSizeFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.filesizeFilter" />
-         </children>
-      </VBox>
-   </left>
+<BorderPane fx:id="rootBorderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="800.0" stylesheets="@../cz.indexer.gui.styles/styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.FileSearchController">
 
     <fx:define>
         <fx:include fx:id="memoryDeviceFilter" source="MemoryDeviceFilter.fxml" />
@@ -87,4 +31,77 @@
     <fx:define>
         <fx:include fx:id="fileSizeFilter" source="FileSizeFilter.fxml" />
     </fx:define>
+   <center>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="280.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="280.0" prefWidth="800.0" styleClass="file-search-gridpane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <GridPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="800.0" VBox.vgrow="NEVER">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label fx:id="searchResultsLabel" text="%label.search.results">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="10.0" top="5.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Button fx:id="searchButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSearchActionButton" prefHeight="35.0" prefWidth="150.0" text="%button.search" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </Button>
+                     </children>
+                  </GridPane>
+                  <TableView fx:id="resultsTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="230.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="nameTableColumn" prefWidth="133.0" text="%column.search.name" />
+                      <TableColumn fx:id="pathTableColumn" prefWidth="133.0" text="%column.search.path" />
+                      <TableColumn fx:id="sizeTableColumn" prefWidth="133.0" text="%column.search.size" />
+                        <TableColumn fx:id="creationTimeTableColumn" minWidth="0.0" prefWidth="133.0" text="%column.search.creationTime" />
+                        <TableColumn fx:id="lastModifiedTimeTableColumn" prefWidth="134.0" text="%column.search.lastModifiedTime" />
+                        <TableColumn fx:id="lastAccessTimeTableColumn" minWidth="0.0" prefWidth="134.0" text="%column.search.lastAccessTime" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <BorderPane fx:id="filterBorderPane" prefHeight="260.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <left>
+            <AnchorPane maxHeight="260.0" maxWidth="200.0" prefHeight="260.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="260.0" prefWidth="200.0" styleClass="filtres-vbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="filtersLabel" prefHeight="60.0" text="%label.search.filters">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <JFXButton fx:id="memoryDeviceFilterButton" onAction="#handleMemoryDeviceFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.memoryDevicesFilter" />
+                        <JFXButton fx:id="fileNameFilterButton" onAction="#handleFileNameFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.filenameFilter" />
+                        <JFXButton fx:id="dateFilterButton" onAction="#handleDateFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.dateFilter" />
+                        <JFXButton fx:id="fileSizeFilterButton" onAction="#handleFileSizeFilterButton" prefHeight="50.0" prefWidth="200.0" styleClass="filter-button" text="%button.search.filesizeFilter" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </left>
+      </BorderPane>
+   </top>
 </BorderPane>

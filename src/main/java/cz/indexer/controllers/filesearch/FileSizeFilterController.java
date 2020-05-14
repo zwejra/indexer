@@ -18,7 +18,7 @@ public class FileSizeFilterController implements Initializable {
 	private Label sizeFilterLabel;
 
 	@FXML
-	@Getter private JFXComboBox<String> fileSizeComboBox;
+	@Getter private JFXComboBox fileSizeComboBox;
 
 	@FXML
 	@Getter private JFXTextField fileSizeTextField;
@@ -26,17 +26,25 @@ public class FileSizeFilterController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		sizeFilterLabel.textProperty().bind(I18N.createStringBinding("label.size.filter"));
-		refreshSizeFilterComboBox();
-	}
 
-	public void refreshSizeFilterComboBox() {
-		fileSizeComboBox.getItems().clear();
-		fileSizeComboBox.getItems().addAll(
-				I18N.getMessage(SizeCondition.SMALLER),
-				I18N.getMessage(SizeCondition.SMALLER_EQUAL),
-				I18N.getMessage(SizeCondition.EQUAL),
-				I18N.getMessage(SizeCondition.BIGGER),
-				I18N.getMessage(SizeCondition.BIGGER_EQUAL)
+		Label smaller = new Label();
+		Label smallerEqual = new Label();
+		Label equal = new Label();
+		Label bigger = new Label();
+		Label biggerEqual = new Label();
+
+		smaller.textProperty().bind(I18N.createStringBinding("smaller"));
+		smallerEqual.textProperty().bind(I18N.createStringBinding("smaller.equal"));
+		equal.textProperty().bind(I18N.createStringBinding("equal"));
+		bigger.textProperty().bind(I18N.createStringBinding("bigger"));
+		biggerEqual.textProperty().bind(I18N.createStringBinding("bigger.equal"));
+
+		fileSizeComboBox.getItems().setAll(
+				smaller,
+				smallerEqual,
+				equal,
+				bigger,
+				biggerEqual
 		);
 	}
 }

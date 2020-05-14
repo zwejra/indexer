@@ -7,68 +7,64 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="260.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.DateFilterController">
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="260.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.filesearch.DateFilterController">
    <children>
-      <VBox alignment="CENTER" layoutX="146.0" layoutY="72.0" prefHeight="260.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane fx:id="lastModifiedDate" alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <GridPane fx:id="lastModifiedDate" alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label fx:id="creationDateLabel" text="%label.date.creationDate" />
-                  <Label fx:id="lastModifiedDateLabel" text="%label.date.lastModifiedDate" GridPane.columnIndex="1" />
-                  <Label fx:id="lastAccessDateLabel" text="%label.date.lastAccessDate" GridPane.columnIndex="2" />
-                  <JFXDatePicker fx:id="creationDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="creationDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.rowIndex="3" />
-                  <JFXDatePicker fx:id="lastModifiedDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="lastModifiedDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <JFXDatePicker fx:id="lastAccessDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <JFXTimePicker fx:id="lastAccessDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <JFXComboBox fx:id="creationDateComboBox" prefWidth="180.0" GridPane.rowIndex="1">
-                      <items>
-                          <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="before" />
-                              <String fx:value="after" />
-                          </FXCollections>
-                      </items>
-                  </JFXComboBox>
-                  <JFXComboBox fx:id="lastModifiedDateComboBox" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                      <items>
-                          <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="before" />
-                              <String fx:value="after" />
-                          </FXCollections>
-                      </items>
-                  </JFXComboBox>
-                   <JFXComboBox fx:id="lastAccessDateComboBox" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                       <items>
-                           <FXCollections fx:factory="observableArrayList">
-                               <String fx:value="before" />
-                               <String fx:value="after" />
-                           </FXCollections>
-                       </items>
-                   </JFXComboBox>
-            </children>
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </VBox.margin>
-            </GridPane>
-         </children>
-      </VBox>
+            <Label fx:id="creationDateLabel" text="%label.date.creationDate" />
+            <Label fx:id="lastModifiedDateLabel" text="%label.date.lastModifiedDate" GridPane.columnIndex="1" />
+            <Label fx:id="lastAccessDateLabel" text="%label.date.lastAccessDate" GridPane.columnIndex="2" />
+            <JFXDatePicker fx:id="creationDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.rowIndex="2" />
+            <JFXTimePicker fx:id="creationDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.rowIndex="3" />
+            <JFXDatePicker fx:id="lastModifiedDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <JFXTimePicker fx:id="lastModifiedDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <JFXDatePicker fx:id="lastAccessDateDatePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <JFXTimePicker fx:id="lastAccessDateTimePicker" defaultColor="BLACK" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <JFXComboBox fx:id="creationDateComboBox" prefWidth="180.0" GridPane.rowIndex="1">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="before" />
+                        <String fx:value="after" />
+                    </FXCollections>
+                </items>
+            </JFXComboBox>
+            <JFXComboBox fx:id="lastModifiedDateComboBox" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="before" />
+                        <String fx:value="after" />
+                    </FXCollections>
+                </items>
+            </JFXComboBox>
+             <JFXComboBox fx:id="lastAccessDateComboBox" prefWidth="180.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                 <items>
+                     <FXCollections fx:factory="observableArrayList">
+                         <String fx:value="before" />
+                         <String fx:value="after" />
+                     </FXCollections>
+                 </items>
+             </JFXComboBox>
+      </children>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+      </GridPane>
    </children>
-</AnchorPane>
+</VBox>

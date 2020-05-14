@@ -32,15 +32,9 @@ public class MainSceneController implements Initializable {
 
 	public void handleChangeLanguageToCzech(ActionEvent actionEvent) {
 		I18N.setLocale(new Locale("cs", "CZ"));
-		fileSearchController.getDateFilterController().refreshDateComboBoxes();
-		fileSearchController.getFileNameFilterController().refreshNameComboBoxes();
-		fileSearchController.getFileSizeFilterController().refreshSizeFilterComboBox();
 	}
 
 	public void handleChangeLanguageToEnglish(ActionEvent actionEvent) {
 		I18N.setLocale(Locale.ENGLISH);
-		fileSearchController.getDateFilterController().refreshDateComboBoxes();
-		fileSearchController.getFileNameFilterController().refreshNameComboBoxes();
-		fileSearchController.getFileSizeFilterController().refreshSizeFilterComboBox();
 	}
 }
