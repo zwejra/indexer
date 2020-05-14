@@ -29,7 +29,7 @@
                 </Tab>
                </tabs>
             </TabPane>
-            <HBox alignment="CENTER_RIGHT" maxHeight="30.0" prefHeight="30.0" prefWidth="800.0" styleClass="footer">
+            <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" prefHeight="35.0" prefWidth="800.0" styleClass="footer">
                <children>
                   <Button fx:id="czechButton" mnemonicParsing="false" onAction="#handleChangeLanguageToCzech">
                      <graphic>

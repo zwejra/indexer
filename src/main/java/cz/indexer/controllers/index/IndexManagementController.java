@@ -13,10 +13,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +27,7 @@ public class IndexManagementController implements Initializable {
 	private static final String INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/IndexedMemoryDevice.fxml";
 
 	@FXML
-	private AnchorPane memoryDeviceInfoPane;
+	private BorderPane indexManagementBorderPane;
 
 	@FXML
 	private Label connectedDevicesLabel;
@@ -82,14 +81,14 @@ public class IndexManagementController implements Initializable {
 			if (memoryDevice != null) {
 				if (memoryDevice.isIndexed()) {
 					loader = new FXMLLoader(getClass().getResource(INDEXED_MEMORY_DEVICE_FXML), I18N.getBundle());
-					memoryDeviceInfoPane.getChildren().setAll((Node) loader.load());
+					indexManagementBorderPane.setCenter(loader.load());
 					IndexedMemoryDeviceController indexedMemoryDeviceController = loader.getController();
 					indexedMemoryDeviceController.setSelectedMemoryDevice(memoryDevice);
 
 
 				} else {
 					loader = new FXMLLoader(getClass().getResource(NON_INDEXED_MEMORY_DEVICE_FXML), I18N.getBundle());
-					memoryDeviceInfoPane.getChildren().setAll((Node) loader.load());
+					indexManagementBorderPane.setCenter(loader.load());
 					NonIndexedMemoryDeviceController nonIndexedMemoryDeviceController = loader.getController();
 					nonIndexedMemoryDeviceController.setSelectedMemoryDevice(memoryDevice);
 				}

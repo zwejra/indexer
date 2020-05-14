@@ -4,9 +4,16 @@
     -fx-border-style: solid;
 }
 
-.memory-devices-list-view {
+.connected-memory-devices-list-view {
     -fx-background-insets: 0 1;
     -fx-border-width: 1 0;
+    -fx-border-color: #bababa;
+    -fx-border-style: solid;
+}
+
+.disconnected-memory-devices-list-view {
+    -fx-background-insets: 0 1;
+    -fx-border-width: 1 0 0 0;
     -fx-border-color: #bababa;
     -fx-border-style: solid;
 }
@@ -18,7 +25,7 @@
 }
 
 .file-search-gridpane {
-    -fx-border-width: 1 0 0 0;
+    -fx-border-width: 1 0 1 0;
     -fx-border-color: #bababa;
     -fx-border-style: solid;
 }
@@ -34,4 +41,9 @@
     -fx-border-color: #bababa;
     -fx-border-style: solid;
     -jfx-button-type: RAISED;
+}
+
+.table-view {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
