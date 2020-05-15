@@ -22,20 +22,6 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-/*ext {
-    eclipselink='2.7.6'
-    metamodelPath="$buildDir/generated/sources/metamodel/java/main"
-    persistenceXMLLocation="src/main/resources/META-INF/persistence.xml"
-}
-
-compileJava {
-    doFirst {
-        file(metamodelPath).delete()
-        file(metamodelPath).mkdirs()
-    }
-    options.compilerArgs += ["-Aeclipselink.persistencexml=${new File(project.projectDir, persistenceXMLLocation).absolutePath}", '-s', metamodelPath]
-}*/
-
 dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink
     compile group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.7.6'
@@ -67,6 +53,18 @@ jar {
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+task fatJar(type: Jar) {
+    manifest.from jar.manifest
+    from {
+        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    with jar
 }
 
 test {

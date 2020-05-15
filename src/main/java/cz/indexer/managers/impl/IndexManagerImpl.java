@@ -409,9 +409,7 @@ public class IndexManagerImpl implements IndexManager {
 			indexedFile.setLastModifiedTime(LocalDateTime.ofInstant(attrs.lastModifiedTime().toInstant(), ZoneId.systemDefault()));
 		}
 
-		System.out.println("STOJIM PRED");
 		if (indexedMetadataSet.contains(OptionalMetadata.SIZE.toString())) {
-			System.out.println("NASTAVUJI");
 			indexedFile.setFileSize(attrs.size()/1024);
 		}
 
