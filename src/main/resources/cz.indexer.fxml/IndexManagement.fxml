@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="indexManagementBorderPane" prefHeight="540.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.indexer.controllers.index.IndexManagementController">
+   <left>
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="400.0" minWidth="200.0" prefHeight="540.0" prefWidth="300.0" styleClass="indexed-media-vbox" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="40.0" prefWidth="300.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label fx:id="connectedDevicesLabel" text="%label.connectedDevices">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="7.0" left="10.0" right="5.0" top="7.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshButtonAction" prefHeight="30.0" prefWidth="30.0">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../cz.indexer.gui.icons/refresh_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <JFXListView fx:id="connectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="connected-memory-devices-list-view" VBox.vgrow="ALWAYS" />
+            <HBox prefHeight="40.0" prefWidth="300.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label fx:id="disconnectedDevicesLabel" alignment="BOTTOM_LEFT" prefWidth="200.0" text="%label.disconnectedDevices">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="7.0" left="10.0" right="5.0" top="7.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <JFXListView fx:id="disconnectedMemoryDevicesListView" prefHeight="230.0" prefWidth="200.0" styleClass="disconnected-memory-devices-list-view" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </left>
+</BorderPane>
