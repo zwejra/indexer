@@ -31,6 +31,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the pane with the detail of indexed memory device.
+ */
 public class IndexedMemoryDeviceController implements Initializable {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());

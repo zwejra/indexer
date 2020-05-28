@@ -16,6 +16,10 @@ import lombok.Getter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Dialog with the progress bar.
+ * Used for creation and update of index.
+ */
 public class ProgressDialogController implements Initializable {
 
 	public static final String PROGRESS_DIALOG_FXML = "/cz.indexer.fxml/ProgressDialog.fxml";

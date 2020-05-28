@@ -44,7 +44,7 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 	private IndexedFileDAOImpl() {}
 
 	@Override
-	public boolean createFiles(List<IndexedFile> files) {
+	public void createFiles(List<IndexedFile> files) {
 
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
@@ -58,11 +58,10 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 		entityManager.getEntityManagerFactory().getCache().evictAll();
 
-		return true;
 	}
 
 	@Override
-	public boolean updateFiles(List<IndexedFile> indexedFiles) {
+	public void updateFiles(List<IndexedFile> indexedFiles) {
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -74,11 +73,10 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
 	}
 
 	@Override
-	public boolean deleteFiles(List<IndexedFile> files) {
+	public void deleteFiles(List<IndexedFile> files) {
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
 		entityManager.getTransaction().begin();
@@ -91,7 +89,6 @@ public class IndexedFileDAOImpl implements IndexedFileDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
 	}
 
 	@Override

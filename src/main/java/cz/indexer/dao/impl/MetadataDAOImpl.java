@@ -33,21 +33,7 @@ public class MetadataDAOImpl implements MetadataDAO {
 
 	private MetadataDAOImpl() {}
 
-	@Override
-	public boolean createMetadata(Metadata metadata) {
-		entityManager.getTransaction().begin();
-		logger.debug(I18N.getMessage("debug.transaction.started"));
-
-		entityManager.persist(metadata);
-		logger.info(I18N.getMessage("info.transaction.metadata.created", metadata));
-
-		entityManager.getTransaction().commit();
-		logger.debug(I18N.getMessage("debug.transaction.commited"));
-
-		return true;
-	}
-
-	public boolean createMetadata(List<Metadata> metadataList) {
+	public void createMetadata(List<Metadata> metadataList) {
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -59,11 +45,10 @@ public class MetadataDAOImpl implements MetadataDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
 	}
 
 	@Override
-	public boolean deleteMetadata(Metadata metadata) {
+	public void deleteMetadata(Metadata metadata) {
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -77,27 +62,6 @@ public class MetadataDAOImpl implements MetadataDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
-	}
-
-	@Override
-	public boolean deleteMetadata(List<Metadata> metadata) {
-		entityManager.getTransaction().begin();
-		logger.debug(I18N.getMessage("debug.transaction.started"));
-
-		if (!entityManager.contains(metadata)) {
-			metadata = entityManager.merge(metadata);
-		}
-
-		for (Metadata removedMetadata: metadata) {
-			entityManager.remove(removedMetadata);
-			logger.info(I18N.getMessage("info.transaction.metadata.removed", removedMetadata));
-		}
-
-		entityManager.getTransaction().commit();
-		logger.debug(I18N.getMessage("debug.transaction.commited"));
-
-		return true;
 	}
 
 	@Override
@@ -107,18 +71,5 @@ public class MetadataDAOImpl implements MetadataDAO {
 		TypedQuery<Metadata> query = entityManager.createQuery(criteriaQuery);
 
 		return query.getResultList();
-	}
-
-	@Override
-	public Metadata getMetadata(String name) {
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Metadata> criteriaQuery = criteriaBuilder.createQuery(Metadata.class);
-
-		Root<Metadata> root = criteriaQuery.from(Metadata.class);
-		Predicate condition = criteriaBuilder.equal(root.get(Metadata_.name), name);
-		criteriaQuery.where(condition);
-		TypedQuery<Metadata> query = entityManager.createQuery(criteriaQuery);
-
-		return query.getResultList().get(0);
 	}
 }

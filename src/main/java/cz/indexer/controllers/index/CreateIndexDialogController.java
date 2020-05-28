@@ -34,6 +34,9 @@ import java.net.URL;
 import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the dialog to set all the settings to create index.
+ */
 public class CreateIndexDialogController implements Initializable {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());

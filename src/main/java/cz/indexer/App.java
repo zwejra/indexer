@@ -17,6 +17,9 @@ import javafx.stage.Stage;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Class called from the Launcher. Creates initial window and shows it to the user.
+ */
 public class App extends Application {
 
 	DatabaseManager databaseManager = DatabaseManagerImpl.getInstance();
@@ -25,12 +28,16 @@ public class App extends Application {
 		launch(args);
 	}
 
+	/**
+	 * Initial method.
+	 * Creates initial window and shows it to the user.
+	 * @param stage initial scene will be set to this stage
+	 * @throws Exception
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		databaseManager.initializeDatabase();
 
-		/*Locale locale = I18N.getDefaultLocale();
-		ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);*/
 		Parent root = FXMLLoader.load(getClass().getResource("/MainScene.fxml"), I18N.getBundle());
 
 		Scene scene = new Scene(root);

@@ -15,6 +15,9 @@ import org.controlsfx.control.CheckListView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the memory device filter in the File Search tab.
+ */
 public class MemoryDeviceFilterController implements Initializable {
 
 	@FXML

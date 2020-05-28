@@ -33,7 +33,7 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 	private MemoryDeviceDAOImpl() {}
 
 	@Override
-	public boolean createMemoryDevice(MemoryDevice memoryDevice) {
+	public void createMemoryDevice(MemoryDevice memoryDevice) {
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -43,11 +43,10 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
 	}
 
 	@Override
-	public boolean updateMemoryDevice(MemoryDevice memoryDevice) {
+	public void updateMemoryDevice(MemoryDevice memoryDevice) {
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -57,11 +56,10 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
 	}
 
 	@Override
-	public boolean deleteMemoryDevice(MemoryDevice memoryDevice) {
+	public void deleteMemoryDevice(MemoryDevice memoryDevice) {
 		entityManager.getTransaction().begin();
 		logger.debug(I18N.getMessage("debug.transaction.started"));
 
@@ -76,7 +74,6 @@ public class MemoryDeviceDAOImpl implements MemoryDeviceDAO {
 		entityManager.getTransaction().commit();
 		logger.debug(I18N.getMessage("debug.transaction.commited"));
 
-		return true;
 	}
 
 	@Override

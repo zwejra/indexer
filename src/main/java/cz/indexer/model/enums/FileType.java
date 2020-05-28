@@ -1,5 +1,8 @@
 package cz.indexer.model.enums;
 
+/**
+ * Enum with file types.
+ */
 public enum FileType {
 	FILE("file"),
 	DIRECTORY("directory"),

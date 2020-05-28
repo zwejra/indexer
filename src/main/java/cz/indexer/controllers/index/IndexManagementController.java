@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Index Management tab.
+ * Refresh icon made by <a href="https://www.flaticon.com/authors/vectors-market">Vectors Market</a> from <a href="https://www.flaticon.com/">flaticon.com</a>"
+ */
 public class IndexManagementController implements Initializable {
 
 	private static final String NON_INDEXED_MEMORY_DEVICE_FXML = "/cz.indexer.fxml/NonIndexedMemoryDevice.fxml";

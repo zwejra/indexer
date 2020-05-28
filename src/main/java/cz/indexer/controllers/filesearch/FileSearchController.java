@@ -48,6 +48,9 @@ import java.time.format.FormatStyle;
 import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller of the File Search tab.
+ */
 public class FileSearchController implements Initializable {
 
 	@FXML

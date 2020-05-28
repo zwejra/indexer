@@ -12,6 +12,9 @@ import lombok.Getter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the file size filter in the File Search tab.
+ */
 public class FileSizeFilterController implements Initializable {
 
 	@FXML

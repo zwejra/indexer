@@ -12,6 +12,9 @@ import lombok.Getter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the date filter in the File Search tab.
+ */
 public class DateFilterController implements Initializable {
 
 	@FXML

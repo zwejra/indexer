@@ -12,6 +12,10 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the main scene, which includes two tabs and footer with localization settings.
+ * "Flag icons made by <a href="https://www.flaticon.com/authors/roundicons">Roundicons</a> from <a href="https://www.flaticon.com/">flaticon.com</a>"
+ */
 public class MainSceneController implements Initializable {
 
 	@FXML

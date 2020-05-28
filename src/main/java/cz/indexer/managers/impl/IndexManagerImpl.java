@@ -80,13 +80,13 @@ public class IndexManagerImpl implements IndexManager {
 	}
 
 	@Override
-	public Task<Void> getCreateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException {
+	public Task<Void> getCreateIndexTask(MemoryDevice memoryDevice) {
 		CreateIndexTask task = new CreateIndexTask(memoryDevice);
 		return task;
 	}
 
 	@Override
-	public Task<Void> getUpdateIndexTask(MemoryDevice memoryDevice) throws InputMismatchException {
+	public Task<Void> getUpdateIndexTask(MemoryDevice memoryDevice) {
 		UpdateIndexTask task = new UpdateIndexTask(memoryDevice);
 		return task;
 	}

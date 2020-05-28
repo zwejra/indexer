@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the pane with the detail of non indexed memory device.
+ */
 public class NonIndexedMemoryDeviceController implements Initializable {
 
 	private static final String CREATE_INDEX_DIALOG_FXML = "/cz.indexer.fxml/CreateIndexDialog.fxml";

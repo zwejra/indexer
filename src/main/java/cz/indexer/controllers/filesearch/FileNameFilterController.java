@@ -11,6 +11,9 @@ import lombok.Getter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the file name filter in the File Search tab.
+ */
 public class FileNameFilterController implements Initializable {
 
 	@FXML

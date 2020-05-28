@@ -23,6 +23,7 @@ public class MemoryDevice {
 
 	/**
 	 * User defined name of a memory device.
+	 * Used in path to the files if the memory device is disconnected.
 	 */
 	@Getter @Setter private String userDefinedName;
 
@@ -34,26 +35,30 @@ public class MemoryDevice {
 	@Getter @Setter private Index index;
 
 	/**
-	 * Label of a memory device.
+	 * Label of the memory device obtained from the operating system.
+	 * Usually its the name of a partition user can see in the operating system.
+	 * Not stored in database.
 	 */
 	@Transient
 	@Getter @Setter private String label;
 
 	/**
-	 * Path to the mount directory of a memory device.
+	 * Path to the mount (root) directory of a memory device.
+	 * Not stored in database.
 	 */
 	@Transient
 	@Getter private String mount;
 
 	/**
-	 * State of index.
-	 * Value 'Indexed' means that index for this medium exists, 'Non_indexed' means the opposite.
+	 * True when the memory device is indexed, false otherwise.
+	 * Not stored in database.
 	 */
 	@Transient
 	@Getter @Setter private boolean indexed;
 
 	/**
-	 * State of medium - is connected or disconnected.
+	 * True when the memory device is indexed, false otherwise.
+	 * Not stored in database.
 	 */
 	@Transient
 	@Getter @Setter private boolean connected;
